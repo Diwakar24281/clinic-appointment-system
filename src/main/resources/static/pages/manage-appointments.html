@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Audit Log - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">📑 Master Appointment Audit Log</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem;">Complete administrative ledger of all clinic bookings, token states, and prescriptions.</p>
+                </div>
+                <button class="btn btn-sm btn-outline" onclick="loadAdminAppointments()">🔄 Refresh Log</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Apt ID</th>
+                            <th>Token</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date & Time</th>
+                            <th>Status</th>
+                            <th>Prescription</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allAppointmentsTable">
+                        <!-- Populated dynamically via admin.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuthGuard(['ADMIN'])) {
+                loadAdminAppointments();
+            }
+        });
+    </script>
+</body>
+</html>

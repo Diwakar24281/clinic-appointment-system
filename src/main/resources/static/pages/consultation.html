@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Consultation & Prescription - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container" style="max-width: 950px;">
+        <!-- Patient Consultation Header -->
+        <div class="card" style="background: #ffffff; border-left: 5px solid var(--accent); margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <span class="badge badge-consultation" style="margin-bottom: 0.3rem;">ACTIVE CONSULTATION</span>
+                    <h2 id="patientNameBanner" style="color: var(--secondary); font-size: 1.4rem;">Patient Name</h2>
+                    <p id="patientPhoneBanner" style="color: var(--text-muted); font-size: 0.88rem;"></p>
+                </div>
+                <div style="text-align: right;">
+                    <div id="tokenBanner" style="font-size: 1.8rem; font-weight: 900; color: var(--accent);">Token #--</div>
+                    <small id="appointmentTimeBanner" style="color: var(--text-muted); font-size: 0.85rem;"></small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prescription Authoring Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">📝 Clinical Assessment & Prescription</h3>
+                <a href="/pages/doctor-dashboard.html" class="btn btn-sm btn-outline">Back to Queue</a>
+            </div>
+
+            <form id="consultationForm" onsubmit="submitPrescription(event)">
+                <!-- Diagnosis -->
+                <div class="form-group">
+                    <label class="form-label" for="prescDiagnosis">Clinical Diagnosis *</label>
+                    <input type="text" id="prescDiagnosis" class="form-control" placeholder="e.g. Acute Bronchitis, Seasonal Allergy" required>
+                </div>
+
+                <!-- Notes & Instructions -->
+                <div class="form-group">
+                    <label class="form-label" for="prescNotes">Doctor's Notes & Advice</label>
+                    <textarea id="prescNotes" class="form-control" rows="3" placeholder="Dietary instructions, follow-up recommendations, or precautions..."></textarea>
+                </div>
+
+                <!-- Medicines Table -->
+                <div style="margin-top: 1.8rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                        <label class="form-label" style="margin-bottom: 0;">Prescribed Medications</label>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="addMedicineRow()">➕ Add Medicine</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table" style="background: white;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 28%;">Medicine Name *</th>
+                                    <th style="width: 15%;">Dosage *</th>
+                                    <th style="width: 18%;">Frequency *</th>
+                                    <th style="width: 15%;">Duration *</th>
+                                    <th>Instructions</th>
+                                    <th style="width: 50px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="medicineTableBody">
+                                <!-- Dynamic Medicine Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                    <a href="/pages/doctor-dashboard.html" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" id="submitPrescBtn" class="btn btn-success" style="padding: 0.75rem 2rem;">
+                        💾 Save Prescription & Complete Consultation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/doctor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuthGuard(['DOCTOR'])) {
+                initConsultationPage();
+            }
+        });
+    </script>
+</body>
+</html>

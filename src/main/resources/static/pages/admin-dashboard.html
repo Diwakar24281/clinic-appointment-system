@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <!-- Admin Banner -->
+        <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white;">
+            <span style="background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Central Administration</span>
+            <h2 style="font-size: 1.8rem; margin-top: 0.5rem;">Clinic Overview & System Controls</h2>
+            <p style="opacity: 0.85; font-size: 0.9rem; margin-top: 0.2rem;">Manage medical staff, clinical departments, patient records, and appointments.</p>
+        </div>
+
+        <!-- KPI Metrics Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">👨‍⚕️</div>
+                <div>
+                    <div class="stat-val" id="statTotalDoctors">0</div>
+                    <div class="stat-label">Total Doctors</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--accent-light); color: var(--accent);">👥</div>
+                <div>
+                    <div class="stat-val" id="statTotalPatients">0</div>
+                    <div class="stat-label">Registered Patients</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">📅</div>
+                <div>
+                    <div class="stat-val" id="statTodayApts">0</div>
+                    <div class="stat-label">Today's Appointments</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">✅</div>
+                <div>
+                    <div class="stat-val" id="statCompletedApts">0</div>
+                    <div class="stat-label">Completed Visits</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Quick Actions Grid -->
+        <h3 style="font-size: 1.25rem; color: var(--secondary); margin-bottom: 1rem;">Management Modules</h3>
+        <div class="stats-grid">
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">👨‍⚕️</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.4rem;">Doctors & Schedules</h4>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">Add new doctors, set weekly consultation hours, and activate or deactivate accounts.</p>
+                </div>
+                <a href="/pages/manage-doctors.html" class="btn btn-outline" style="width: 100%;">Manage Doctors &rarr;</a>
+            </div>
+
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏷️</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.4rem;">Medical Specializations</h4>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">Add and configure clinic departments such as Cardiology, Pediatrics, and Dermatology.</p>
+                </div>
+                <a href="/pages/manage-specializations.html" class="btn btn-outline" style="width: 100%;">Manage Specializations &rarr;</a>
+            </div>
+
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📑</div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.4rem;">Appointment Audit Log</h4>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">View all scheduled, completed, and cancelled appointments across the entire clinic.</p>
+                </div>
+                <a href="/pages/manage-appointments.html" class="btn btn-outline" style="width: 100%;">Audit Appointments &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuthGuard(['ADMIN'])) {
+                loadAdminStats();
+            }
+        });
+    </script>
+</body>
+</html>

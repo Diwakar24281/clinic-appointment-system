@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">📋 My Appointment History</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem;">Track booking status, view token numbers, and open digital prescriptions.</p>
+                </div>
+                <a href="/pages/doctors.html" class="btn btn-primary">➕ Book New Slot</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Token #</th>
+                            <th>Doctor & Specialization</th>
+                            <th>Appointment Date</th>
+                            <th>Time Slot</th>
+                            <th>Fee</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientAppointmentsTable">
+                        <!-- Loaded dynamically via patient.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/patient.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuthGuard(['PATIENT'])) {
+                loadPatientAppointments();
+            }
+        });
+    </script>
+</body>
+</html>

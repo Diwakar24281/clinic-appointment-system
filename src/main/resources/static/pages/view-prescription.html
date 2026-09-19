@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Prescription - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        @media print {
+            .navbar, footer, .no-print {
+                display: none !important;
+            }
+            body {
+                background: white;
+            }
+            .container {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container" style="max-width: 850px; margin-top: 2rem;">
+        <div class="no-print" style="margin-bottom: 1rem; display: flex; justify-content: space-between;">
+            <button onclick="window.history.back()" class="btn btn-secondary btn-sm">&larr; Back</button>
+            <button onclick="window.print()" class="btn btn-primary btn-sm">🖨️ Print Prescription</button>
+        </div>
+
+        <div class="card" id="prescriptionCard" style="padding: 2.5rem; background: white;">
+            <!-- Clinic Letterhead -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--primary); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+                <div>
+                    <h1 style="color: var(--primary); font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px;">CARE CLINIC</h1>
+                    <p style="color: var(--text-muted); font-size: 0.85rem;">Multi-Specialty Healthcare & Outpatient Center</p>
+                    <p style="color: var(--text-muted); font-size: 0.82rem;">100 Healthcare Blvd, Metro City | Phone: (080) 2468-1357</p>
+                </div>
+                <div style="text-align: right;">
+                    <div style="background: var(--primary-light); color: var(--primary); padding: 0.4rem 0.9rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem; display: inline-block;">
+                        e-PRESCRIPTION
+                    </div>
+                    <p id="rxDate" style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;"></p>
+                </div>
+            </div>
+
+            <!-- Doctor & Patient Info Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; background: #f8fafc; padding: 1.2rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                <div>
+                    <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Prescribed By:</span>
+                    <h3 id="rxDocName" style="color: var(--secondary); font-size: 1.15rem; margin: 0.2rem 0;"></h3>
+                    <p id="rxDocSpec" style="color: var(--primary); font-size: 0.9rem; font-weight: 600;"></p>
+                </div>
+                <div>
+                    <span style="font-size: 0.78rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Patient Details:</span>
+                    <h3 id="rxPatientName" style="color: var(--secondary); font-size: 1.15rem; margin: 0.2rem 0;"></h3>
+                    <p id="rxPatientMeta" style="color: var(--text-muted); font-size: 0.88rem;"></p>
+                </div>
+            </div>
+
+            <!-- Clinical Diagnosis -->
+            <div style="margin-bottom: 1.5rem;">
+                <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted);">Diagnosis:</span>
+                <div id="rxDiagnosis" style="font-size: 1.1rem; font-weight: 600; color: var(--secondary); margin-top: 0.3rem;"></div>
+            </div>
+
+            <!-- Prescribed Medications -->
+            <div style="margin-bottom: 1.8rem;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: var(--secondary); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>💊</span> Rx - Prescribed Medicines
+                </h3>
+                <div class="table-responsive">
+                    <table class="table" style="border: 1px solid var(--border);">
+                        <thead>
+                            <tr style="background: #f1f5f9;">
+                                <th>#</th>
+                                <th>Medicine Name</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Duration</th>
+                                <th>Instructions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rxMedicinesTable">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Doctor Notes & Advice -->
+            <div id="rxNotesBox" style="margin-bottom: 2.5rem; background: #fffbeb; border: 1px solid #fef3c7; padding: 1rem; border-radius: 8px;">
+                <span style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; color: #b45309;">Clinical Advice & Notes:</span>
+                <p id="rxNotes" style="font-size: 0.95rem; color: #92400e; margin-top: 0.3rem; line-height: 1.5;"></p>
+            </div>
+
+            <!-- Doctor Signature Block -->
+            <div style="display: flex; justify-content: flex-end; margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
+                <div style="text-align: center;">
+                    <div style="font-family: cursive; font-size: 1.3rem; color: var(--secondary); margin-bottom: 0.3rem;">Authorized Signature</div>
+                    <div id="rxDocSig" style="font-size: 0.9rem; font-weight: 700; color: var(--secondary);"></div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted);">Verified Electronic Medical Record</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const appointmentId = urlParams.get('appointmentId');
+
+            if (!appointmentId) {
+                showAlert('Prescription not found.', 'error');
+                return;
+            }
+
+            try {
+                const rx = await apiRequest(`/prescriptions/appointment/${appointmentId}`);
+                
+                document.getElementById('rxDate').innerText = `Consultation Date: ${rx.appointmentDate}`;
+                document.getElementById('rxDocName').innerText = rx.doctorName;
+                document.getElementById('rxDocSpec').innerText = rx.doctorSpecialization;
+                document.getElementById('rxPatientName').innerText = rx.patientName;
+                document.getElementById('rxPatientMeta').innerText = `Phone: ${rx.patientPhone || 'N/A'} | Gender: ${rx.patientGender || 'N/A'}`;
+                document.getElementById('rxDiagnosis').innerText = rx.diagnosis;
+                document.getElementById('rxDocSig').innerText = rx.doctorName;
+
+                if (rx.notes && rx.notes.trim()) {
+                    document.getElementById('rxNotes').innerText = rx.notes;
+                } else {
+                    document.getElementById('rxNotesBox').style.display = 'none';
+                }
+
+                const medTable = document.getElementById('rxMedicinesTable');
+                if (rx.medicines && rx.medicines.length > 0) {
+                    let html = '';
+                    rx.medicines.forEach((m, idx) => {
+                        html += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td><strong>${m.medicineName}</strong></td>
+                            <td>${m.dosage}</td>
+                            <td>${m.frequency}</td>
+                            <td>${m.duration}</td>
+                            <td>${m.instructions || '-'}</td>
+                        </tr>`;
+                    });
+                    medTable.innerHTML = html;
+                } else {
+                    medTable.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">No medications prescribed. Follow general advice.</td></tr>';
+                }
+
+            } catch (error) {
+                document.getElementById('prescriptionCard').innerHTML = `<div style="text-align:center; color: var(--danger); padding: 3rem;">Prescription record not found for this consultation.</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

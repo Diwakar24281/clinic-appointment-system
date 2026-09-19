@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Doctors - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">👨‍⚕️ Manage Doctors & Schedules</h2>
+                    <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.2rem;">Add new doctor profiles, assign specializations, and manage availability status.</p>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="openAddDoctorModal()">➕ Add New Doctor</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Doctor Name</th>
+                            <th>Specialization</th>
+                            <th>Email</th>
+                            <th>Consultation Fee</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDoctorsTable">
+                        <!-- Populated dynamically via admin.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Doctor Modal -->
+    <div id="addDoctorModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 550px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                <h3 class="card-title" style="margin-bottom: 0;">Add New Doctor</h3>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="closeAddDoctorModal()">✕</button>
+            </div>
+
+            <form id="addDoctorForm" onsubmit="handleCreateDoctor(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Doctor Full Name *</label>
+                        <input type="text" id="docNameInput" class="form-control" placeholder="Dr. Ananya Roy" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" id="docEmailInput" class="form-control" placeholder="ananya@clinic.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Temporary Password *</label>
+                        <input type="password" id="docPasswordInput" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Specialization *</label>
+                        <select id="docSpecSelect" class="form-control" required>
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Consultation Fee (₹) *</label>
+                    <input type="number" id="docFeeInput" class="form-control" placeholder="500.00" step="10" min="0" required>
+                </div>
+
+                <div style="background: #f8fafc; border: 1px dashed var(--border); padding: 0.8rem; border-radius: 6px; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.2rem;">
+                    ℹ️ <strong>Note:</strong> Default schedule (Mon – Sat, 09:00 AM – 01:00 PM) will be automatically assigned.
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.8rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddDoctorModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Doctor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/patient.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        function openAddDoctorModal() {
+            document.getElementById('addDoctorModal').classList.add('active');
+        }
+        function closeAddDoctorModal() {
+            document.getElementById('addDoctorModal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (checkAuthGuard(['ADMIN'])) {
+                await loadAdminSpecializations();
+                await loadSpecializations('docSpecSelect');
+                await loadAdminDoctors();
+            }
+        });
+    </script>
+</body>
+</html>

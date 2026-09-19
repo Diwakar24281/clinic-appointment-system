@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container" style="max-width: 580px; margin-top: 2.5rem;">
+        <div class="card" style="padding: 2.2rem;">
+            <div style="text-align: center; margin-bottom: 1.8rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
+                <h2 class="card-title" style="font-size: 1.5rem;">Create Patient Account</h2>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.3rem;">Register to book appointments & manage prescriptions</p>
+            </div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="regName">Full Name *</label>
+                        <input type="text" id="regName" class="form-control" placeholder="e.g. Rohan Sharma" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regEmail">Email Address *</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="rohan@example.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="regPassword">Password *</label>
+                        <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regPhone">Phone Number *</label>
+                        <input type="tel" id="regPhone" class="form-control" placeholder="10-digit mobile number" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="regDob">Date of Birth</label>
+                        <input type="date" id="regDob" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regGender">Gender</label>
+                        <select id="regGender" class="form-control">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="regAddress">Address / City</label>
+                    <input type="text" id="regAddress" class="form-control" placeholder="Residential address">
+                </div>
+
+                <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">Create Account</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+                Already have an account? <a href="/pages/login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

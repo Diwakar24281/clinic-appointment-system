@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container" style="max-width: 460px; margin-top: 3.5rem;">
+        <div class="card" style="padding: 2.2rem;">
+            <div style="text-align: center; margin-bottom: 1.8rem;">
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔐</div>
+                <h2 class="card-title" style="font-size: 1.5rem;">Sign In to Your Account</h2>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.3rem;">Access Patient, Doctor, or Admin Portals</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="loginSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">Sign In</button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
+                Don't have an account? <a href="/pages/register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Register here</a>
+            </div>
+
+            <!-- Preloaded Test Credentials Help Box -->
+            <div style="margin-top: 1.5rem; background: #f8fafc; border: 1px dashed var(--border); padding: 0.85rem; border-radius: 8px; font-size: 0.8rem; color: var(--text-muted);">
+                <strong>💡 Preloaded Demo Credentials:</strong><br>
+                • <strong>Admin:</strong> admin@clinic.com / admin123<br>
+                • <strong>Doctor:</strong> dr.ramesh@clinic.com / doctor123<br>
+                • <strong>Patient:</strong> patient@clinic.com / patient123
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

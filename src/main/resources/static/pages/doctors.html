@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Doctors - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">👨‍⚕️ Find a Specialist Doctor</h2>
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="searchBox">Search by Doctor Name</label>
+                    <input type="text" id="searchBox" class="form-control" placeholder="e.g. Ramesh or Cardiology" oninput="loadDoctors()">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="specFilter">Filter by Specialization</label>
+                    <select id="specFilter" class="form-control" onchange="loadDoctors()">
+                        <option value="">All Specializations</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="doctorListContainer">
+            <!-- Doctor Cards Rendered via patient.js -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/patient.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadSpecializations('specFilter');
+            await loadDoctors();
+        });
+    </script>
+</body>
+</html>

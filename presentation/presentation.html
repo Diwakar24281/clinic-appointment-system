@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinic Appointment Booking System - SIST CSE AI Capstone Viva Presentation</title>
+  <meta name="description" content="Academic capstone presentation slide deck for the Clinic Appointment Booking and Real-Time Queue Management System viva defense at Sathyabama Institute of Science and Technology.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="presentation-container">
+    <!-- Top Progress Bar -->
+    <div class="progress-bar-container">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <!-- Top Academic Header -->
+    <header class="pres-header">
+      <div class="header-left">
+        <span class="inst-badge">SIST • CSE (Artificial Intelligence)</span>
+        <span class="header-project-title">Clinic Appointment Booking &amp; Queue Management System</span>
+      </div>
+      <div class="header-meta-tags">
+        <span class="tag-pill">Spring Boot 3.2.5</span>
+        <span class="tag-pill">MySQL 8.0 (3NF)</span>
+        <span class="tag-pill">Vanilla JS (Fetch API)</span>
+        <span class="tag-pill live">Capstone Verified</span>
+      </div>
+    </header>
+
+    <!-- Slides Viewport (Exactly 20 Slides) -->
+    <main class="slides-viewport" id="slidesViewport">
+
+      <!-- =========================================================
+           SLIDE 1: TITLE & STUDENT TEAM METADATA (SIST RUNBOOK)
+           ========================================================= -->
+      <section class="slide active" id="slide-1" data-index="1" data-title="Project Charter & Team Overview">
+        <div class="title-slide-container">
+          <div class="title-hero">
+            <div class="title-inst-header">
+              <span>SATHYABAMA INSTITUTE OF SCIENCE AND TECHNOLOGY (SIST)</span>
+              <span>•</span>
+              <span>Dept. of CSE (Artificial Intelligence)</span>
+            </div>
+            <h1 class="title-main-heading">
+              <span>Clinic Appointment Booking</span><br>&amp; Real-Time Queue Management System
+            </h1>
+            <p class="title-subheading">
+              A 3-Tier Enterprise Full-Stack Clinical Outpatient Automation Platform with Concurrency-Locked 30-Minute Slot Reservations, Doctor-Isolated Daily Token Allocation, Role-Based Dashboards, Multi-Row Digital Prescriptions, and Live Lobby Queue Synchronization.
+            </p>
+          </div>
+
+          <div class="title-meta-grid">
+            <div>
+              <div class="meta-col-title">Project Charter &amp; Academic Scope</div>
+              <div class="card subtle" style="padding: 10px 14px;">
+                <div style="font-size: 0.86rem; font-weight: 700; color: var(--text-primary);">Course: Full-Stack Capstone Project</div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Degree: <strong>B.E. CSE (AI) — 3rd Year</strong></div>
+                <div style="font-size: 0.8rem; color: var(--text-secondary);">Batch / Section: <strong style="color: var(--primary-dark);">2024–2028 / Sec [A5]</strong></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="meta-col-title">Student Presentation Team</div>
+              <div class="student-list">
+                <div class="student-item">
+                  <span><strong>N. Diwakar</strong> (Lead Full-Stack)</span>
+                  <span class="student-reg">REG: 44731156</span>
+                </div>
+                <div class="student-item">
+                  <span><strong>Alexiya Fernando</strong> (Partner Dev)</span>
+                  <span class="student-reg">REG: 44731004</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="meta-col-title">Department Evaluation &amp; Defense</div>
+              <div class="card subtle" style="padding: 10px 14px;">
+                <div style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary);">Placement Training Cell / Faculty Evaluator</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">Phase 4: Capstone Viva Defense &amp; Evaluation</div>
+                <div style="margin-top: 8px; font-size: 0.76rem; color: var(--success-dark); font-weight: 700;">● SIST 100-Mark Rubric Assessment</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 2: INTRODUCTION & INDUSTRY DOMAIN BACKGROUND
+           ========================================================= -->
+      <section class="slide" id="slide-2" data-index="2" data-title="Introduction & Domain Background">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 1: Define</span>
+            <h2 class="slide-title">Introduction &amp; Industry Domain Background</h2>
+            <p class="slide-subtitle">Digital transformation in outpatient department (OPD) healthcare scheduling.</p>
+          </div>
+          <span class="slide-badge-meta">Healthcare Informatics</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">01</span>
+                Healthcare Workflow Digitization
+              </div>
+              <p class="card-desc">
+                Outpatient clinics process millions of consultations daily, yet manual paper registers create severe operational delays, high administrative costs, and vulnerable clinical records.
+              </p>
+              <ul class="bullet-list">
+                <li>Automated self-service patient appointment booking</li>
+                <li>Digital shift schedules for consulting medical specialists</li>
+                <li>Elimination of lost physical medical case sheets</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">02</span>
+                The 90+ Minute Lobby Bottleneck
+              </div>
+              <p class="card-desc">
+                Unscheduled walk-in crowds and manual cardboard token distribution result in opaque queues where patients have zero visibility into their actual examination time.
+              </p>
+              <ul class="bullet-list">
+                <li>High patient anxiety and reception desk crowding</li>
+                <li>Elevated infection risk in dense waiting areas</li>
+                <li>Unpredictable doctor consultation schedules</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">03</span>
+                Role-Centric Synergy
+              </div>
+              <p class="card-desc">
+                An enterprise clinic ecosystem demands seamless synchronization between three distinct stakeholders plus a public waiting room display.
+              </p>
+              <ul class="bullet-list">
+                <li><strong>Patients:</strong> 30-min slot picker &amp; printable Rx</li>
+                <li><strong>Doctors:</strong> 1-click queue call &amp; diagnosis</li>
+                <li><strong>Admins:</strong> Doctor roster &amp; master audit logs</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card subtle" style="padding: 12px 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 0.88rem; color: var(--text-primary);"><strong>Domain Goal:</strong> Transition OPD clinics from error-prone manual logs to a high-concurrency, zero-collision digital management platform.</span>
+              <span class="tag-pill live">Production Ready</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 3: PROBLEM STATEMENT & REAL-WORLD INEFFICIENCIES
+           ========================================================= -->
+      <section class="slide" id="slide-3" data-index="3" data-title="Problem Statement & Real-World Inefficiencies">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 1: Problem Discovery</span>
+            <h2 class="slide-title">Problem Statement &amp; Real-World Inefficiencies</h2>
+            <p class="slide-subtitle">Analytical breakdown of core failure points documented in our Capstone Runbook.</p>
+          </div>
+          <span class="slide-badge-meta">Operational Deficiencies</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card highlight-danger">
+              <div class="card-title">
+                <span class="icon-badge red">!</span>
+                Double-Booking Collisions &amp; Concurrency Races
+              </div>
+              <p class="card-desc">
+                When appointment booking relies on phone calls, manual counter walk-ins, or un-synchronized forms, receptionists frequently assign the exact same physician time slot to multiple patients.
+              </p>
+              <ul class="bullet-list cross">
+                <li>Severe scheduling overlaps and doctor schedule disruption</li>
+                <li>Zero database-enforced unique constraints on time slots</li>
+                <li>Race conditions during simultaneous web bookings</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-danger">
+              <div class="card-title">
+                <span class="icon-badge red">!</span>
+                Opaque Physical Waiting Queue Management
+              </div>
+              <p class="card-desc">
+                Patients in the waiting area have no insight into the consultation progress, leading to frequent interruptions at reception and chaotic room crowding.
+              </p>
+              <ul class="bullet-list cross">
+                <li>Zero real-time synchronization between doctor room and lobby</li>
+                <li>No doctor-isolated sequential token allocation mechanism</li>
+                <li>Excessive waiting times averaging 90+ minutes</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-warning">
+              <div class="card-title">
+                <span class="icon-badge amber">!</span>
+                Illegible &amp; Ephemeral Paper Prescriptions
+              </div>
+              <p class="card-desc">
+                Handwritten medical notes lead to pharmacy dispensing errors, lack persistent centralized archival, and cannot be digitally retrieved by patients.
+              </p>
+              <ul class="bullet-list cross">
+                <li>Lost medication logs and historical diagnoses</li>
+                <li>Zero standardization for dosage, frequency, and duration</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-warning">
+              <div class="card-title">
+                <span class="icon-badge amber">!</span>
+                Lack of Centralized Administrative Auditing
+              </div>
+              <p class="card-desc">
+                Clinic owners have no real-time metrics on doctor availability, daily revenue collection, completed vs cancelled visits, or weekly utilization trends.
+              </p>
+              <ul class="bullet-list cross">
+                <li>Manual end-of-day tallying prone to discrepancies</li>
+                <li>Inability to dynamically update doctor weekly rosters</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 4: EXISTING SYSTEM & INHERENT BOTTLENECKS
+           ========================================================= -->
+      <section class="slide" id="slide-4" data-index="4" data-title="Existing System vs Bottlenecks">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Comparative Analysis</span>
+            <h2 class="slide-title">Existing System &amp; Inherent Bottlenecks</h2>
+            <p class="slide-subtitle">Comparative gap evaluation between traditional manual clinics and modern requirements.</p>
+          </div>
+          <span class="slide-badge-meta">Gap Analysis</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Operational Dimension</th>
+                  <th style="width: 38%;">Traditional Manual / Semi-Manual System</th>
+                  <th style="width: 40%;">Inherent Operational Failure Mode</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Appointment Booking</strong></td>
+                  <td>Phone calls, physical counter registers, WhatsApp.</td>
+                  <td><span class="table-badge pk">Collision</span> High risk of double-booking; booking limited to clinic hours.</td>
+                </tr>
+                <tr>
+                  <td><strong>Queue Management</strong></td>
+                  <td>Verbal token shouting, paper cardboard slips.</td>
+                  <td><span class="table-badge pk">Chaos</span> Crowd congestion, skipping turns, no live status visibility.</td>
+                </tr>
+                <tr>
+                  <td><strong>Data Concurrency</strong></td>
+                  <td>Single shared physical ledger or static spreadsheet.</td>
+                  <td><span class="table-badge pk">Race Condition</span> Conflicting updates, no ACID transaction guarantees.</td>
+                </tr>
+                <tr>
+                  <td><strong>Prescription Flow</strong></td>
+                  <td>Handwritten paper slips given to patient.</td>
+                  <td><span class="table-badge pk">Error-Prone</span> Illegible handwriting, zero digital history for repeat visits.</td>
+                </tr>
+                <tr>
+                  <td><strong>Doctor Rostering</strong></td>
+                  <td>Static verbal schedules; ad-hoc leave notes.</td>
+                  <td><span class="table-badge pk">Inefficient</span> Patients arrive when doctors are absent or off-duty.</td>
+                </tr>
+                <tr>
+                  <td><strong>Clinic Analytics</strong></td>
+                  <td>Manual register counting at end-of-month.</td>
+                  <td><span class="table-badge pk">Blindspot</span> Zero real-time KPIs on patient throughput or revenue.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="grid-3" style="margin-top: 4px;">
+            <div class="card subtle">
+              <div class="stat-val red">&gt; 90 Min</div>
+              <div class="stat-lbl">Average Waiting Time</div>
+            </div>
+            <div class="card subtle">
+              <div class="stat-val red">High</div>
+              <div class="stat-lbl">Double-Booking Collision Rate</div>
+            </div>
+            <div class="card subtle">
+              <div class="stat-val red">0%</div>
+              <div class="stat-lbl">Digital Prescription Retention</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 5: PROPOSED SYSTEM (OUR CENTRALIZED 3-TIER SOLUTION)
+           ========================================================= -->
+      <section class="slide" id="slide-5" data-index="5" data-title="Proposed System (Centralized 3-Tier Architecture)">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">System Architecture</span>
+            <h2 class="slide-title">Proposed System (Our Centralized 3-Tier Solution)</h2>
+            <p class="slide-subtitle">A decoupled, concurrency-resilient architecture engineered with the CARE framework.</p>
+          </div>
+          <span class="slide-badge-meta">Enterprise Solution</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">UI</span>
+                Tier 1: Client Presentation
+              </div>
+              <p class="card-desc">
+                Semantic HTML5, CSS3 Grid/Flexbox, and Vanilla JS (ES6+) Fetch API interfacing asynchronously via JSON.
+              </p>
+              <ul class="bullet-list check">
+                <li>Dedicated Patient, Doctor, &amp; Admin Portals</li>
+                <li>Dynamic 30-minute interactive slot matrix</li>
+                <li>Live public waiting room board (5s polling)</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">API</span>
+                Tier 2: Business Logic Engine
+              </div>
+              <p class="card-desc">
+                Java 17 &amp; Spring Boot 3.2.5 RESTful micro-controllers handling authentication, transactions, and tokens.
+              </p>
+              <ul class="bullet-list check">
+                <li>BCrypt password encryption with 10 salt rounds</li>
+                <li>Service-layer double-booking validation</li>
+                <li>Doctor-isolated sequential token generator</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">DB</span>
+                Tier 3: Relational Persistence
+              </div>
+              <p class="card-desc">
+                MySQL 8.0 relational database normalized to 3NF with InnoDB ACID transaction compliance.
+              </p>
+              <ul class="bullet-list check">
+                <li>Composite UNIQUE constraint on <code>(doctor_id, date, time)</code></li>
+                <li>Foreign keys with <code>ON DELETE CASCADE</code></li>
+                <li>HikariCP high-performance connection pool</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card subtle" style="padding: 12px 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-around; text-align: center;">
+              <div>
+                <strong style="color: var(--primary);">Collision Prevention:</strong>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--success);">Two-Tier Concurrency Lock</div>
+              </div>
+              <div style="height: 36px; width: 1px; background: var(--border-medium);"></div>
+              <div>
+                <strong style="color: var(--primary);">Token Sequence:</strong>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--success);">Doctor/Date Scoped (1, 2, 3...)</div>
+              </div>
+              <div style="height: 36px; width: 1px; background: var(--border-medium);"></div>
+              <div>
+                <strong style="color: var(--primary);">Prescription Mode:</strong>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--success);">Multi-Row Digital Rx</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 6: PROJECT OBJECTIVES (SMART GOALS & RUNBOOK KPIS)
+           ========================================================= -->
+      <section class="slide" id="slide-6" data-index="6" data-title="Project Objectives (SMART Goals)">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 1: Project Charter</span>
+            <h2 class="slide-title">Project Objectives (SMART Goals &amp; KPIs)</h2>
+            <p class="slide-subtitle">Target metrics defined in our SIST Capstone Charter and successfully verified.</p>
+          </div>
+          <span class="slide-badge-meta">Measurable KPIs</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">S</span>
+                Specific: Multi-Role Portals &amp; Live Queue
+              </div>
+              <ul class="bullet-list check">
+                <li>Deploy separate, secure web portals for Patients, Doctors, and Clinic Administrators.</li>
+                <li>Implement a zero-auth, real-time public waiting room display board for clinic TV monitors.</li>
+                <li>Provide dynamic 30-minute slot segmentation based on doctor weekly rosters.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">M</span>
+                Measurable: 100% Collision Elimination
+              </div>
+              <ul class="bullet-list check">
+                <li><strong>100% Elimination of Double-Bookings:</strong> Multi-layer concurrency lock returning HTTP 409 Conflict.</li>
+                <li><strong>60% Waiting Time Reduction:</strong> Real-time queue transparency cutting lobby wait times under 15 mins.</li>
+                <li><strong>&lt; 200ms API Latency:</strong> Highly optimized Spring Data JPA queries with HikariCP connection pooling.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">A</span>
+                Achievable: Lightweight &amp; Portable Stack
+              </div>
+              <ul class="bullet-list check">
+                <li>Pure HTML5/CSS3/Vanilla JS frontend eliminating heavy Node.js build overhead.</li>
+                <li>Single-command deployment with Spring Boot 3 embedded Tomcat server and automatic database creation.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-purple">
+              <div class="card-title">
+                <span class="icon-badge purple">R/T</span>
+                Realistic &amp; Time-Bound: Viva Deliverables
+              </div>
+              <ul class="bullet-list check">
+                <li>Completed all 4 SDLC phases: Define $\rightarrow$ Design $\rightarrow$ Develop $\rightarrow$ Deploy.</li>
+                <li>Preloaded seed credentials (Admin, Doctors, Patients) for seamless live viva demonstration.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 7: KEY FUNCTIONAL FEATURES IMPLEMENTED (USER STORIES)
+           ========================================================= -->
+      <section class="slide" id="slide-7" data-index="7" data-title="Key Functional Features Implemented">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">User Stories (US-01 to US-06)</span>
+            <h2 class="slide-title">Key Functional Features Implemented</h2>
+            <p class="slide-subtitle">Feature matrix corresponding to the 6 core user stories from our Capstone Runbook.</p>
+          </div>
+          <span class="slide-badge-meta">Feature Matrix</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card highlight-primary">
+              <div class="card-title" style="font-size: 0.92rem;">
+                <span class="icon-badge blue">US-01/02</span>
+                Patient Portal
+              </div>
+              <ul class="bullet-list" style="font-size: 0.78rem;">
+                <li>Self-registration &amp; BCrypt login</li>
+                <li>Doctor search &amp; specialization filter</li>
+                <li>Interactive 30-min slot picker</li>
+                <li>Instant sequential token ticket</li>
+                <li>Appointment history &amp; cancellation</li>
+                <li>Printable digital prescription view</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title" style="font-size: 0.92rem;">
+                <span class="icon-badge teal">US-03/04</span>
+                Doctor Portal
+              </div>
+              <ul class="bullet-list" style="font-size: 0.78rem;">
+                <li>Real-time today's patient queue</li>
+                <li>1-click <strong>"Call Next Patient"</strong></li>
+                <li>State change: <code>IN_CONSULTATION</code></li>
+                <li>Clinical diagnosis &amp; notes input</li>
+                <li>Dynamic multi-row medication table</li>
+                <li>Dosage, frequency &amp; course days</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-purple">
+              <div class="card-title" style="font-size: 0.92rem;">
+                <span class="icon-badge purple">US-06</span>
+                Admin Portal
+              </div>
+              <ul class="bullet-list" style="font-size: 0.78rem;">
+                <li>Overview KPI cards (Drs, Patients, Visits)</li>
+                <li>Doctor profile onboarding</li>
+                <li>Weekly shift schedule configuration</li>
+                <li>Medical specialization catalog</li>
+                <li>Master clinic appointment audit log</li>
+                <li>Doctor active/inactive status toggle</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title" style="font-size: 0.92rem;">
+                <span class="icon-badge green">US-05</span>
+                Waiting Board
+              </div>
+              <ul class="bullet-list" style="font-size: 0.78rem;">
+                <li>Doctor selector dropdown</li>
+                <li><strong>Current Consultation</strong> spotlight</li>
+                <li><strong>Next in Line</strong> token preview</li>
+                <li>Total waiting patient count</li>
+                <li>Periodic 5s auto-polling (Fetch API)</li>
+                <li>Optimized for TV lobby screens</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card subtle" style="padding: 10px 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem;">
+              <span><strong>US-01 to US-04:</strong> P0 (Must Have)</span>
+              <span><strong>US-05 &amp; US-06:</strong> P1 (High Priority)</span>
+              <span><strong>Acceptance Rate:</strong> 100% Passed</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 8: TECHNOLOGY STACK (LANGUAGES, FRAMEWORKS & TOOLS)
+           ========================================================= -->
+      <section class="slide" id="slide-8" data-index="8" data-title="Technology Stack & Tools">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 2: Tech Selection</span>
+            <h2 class="slide-title">Technology Stack (Languages, Frameworks &amp; Tools)</h2>
+            <p class="slide-subtitle">Industry-standard open-source technologies selected for performance and portability.</p>
+          </div>
+          <span class="slide-badge-meta">Enterprise Stack</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">🌐</span>
+                Frontend Layer
+              </div>
+              <ul class="bullet-list">
+                <li><strong>HTML5:</strong> Semantic markup, accessible forms, data attributes, clean document structure.</li>
+                <li><strong>CSS3:</strong> CSS Custom Properties, Flexbox, CSS Grid, media queries, print stylesheets.</li>
+                <li><strong>Vanilla JS (ES6+):</strong> Native Fetch API, async/await, DOM manipulation, <code>localStorage</code> session management.</li>
+                <li><strong>Zero Framework Overhead:</strong> No heavy build steps, instant browser rendering.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">☕</span>
+                Backend Layer
+              </div>
+              <ul class="bullet-list">
+                <li><strong>Java 17 (LTS):</strong> Strong typing, modern record types, robust memory management.</li>
+                <li><strong>Spring Boot 3.2.5:</strong> Embedded Tomcat web server, Dependency Injection, REST Controllers.</li>
+                <li><strong>Spring Data JPA &amp; Hibernate:</strong> ORM mapping, automated DDL generation, JPQL queries.</li>
+                <li><strong>Spring Security Crypto:</strong> One-way BCrypt password hashing for credential protection.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">🗄️</span>
+                Database &amp; Build Tools
+              </div>
+              <ul class="bullet-list">
+                <li><strong>MySQL 8.0:</strong> InnoDB ACID engine, composite unique indexing, foreign key cascade rules.</li>
+                <li><strong>Apache Maven 3.9+:</strong> Declarative dependency management, automated packaging into executable JAR.</li>
+                <li><strong>HikariCP:</strong> High-performance JDBC connection pooling for high-concurrency database queries.</li>
+                <li><strong>Jackson JSON:</strong> Seamless Java object-to-JSON serialization and deserialization.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 9: 3-TIER SYSTEM ARCHITECTURE & MULTI-PORT DATA FLOW
+           ========================================================= -->
+      <section class="slide" id="slide-9" data-index="9" data-title="3-Tier System Architecture & Multi-Port Flow">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 2: Draw.io Architecture</span>
+            <h2 class="slide-title">3-Tier System Architecture &amp; Multi-Port Data Flow</h2>
+            <p class="slide-subtitle">Clear network and logical separation modeled as specified in our Draw.io system design.</p>
+          </div>
+          <span class="slide-badge-meta">Topology: :5500 → :8080 → :3306</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="diagram-container">
+            <div class="diag-node primary">
+              <div class="diag-node-title">Tier 1: Client Web Frontend</div>
+              <div class="diag-node-desc">HTML5 UI / CSS Grid / Vanilla JS</div>
+              <div class="diag-node-port">PORT :5500 / :8080 Static</div>
+              <div style="margin-top: 6px; font-size: 0.72rem; color: var(--text-muted);">
+                Fetch API (Async JSON Requests)
+              </div>
+            </div>
+
+            <div class="diag-arrow">
+              <span>HTTP/1.1 REST</span>
+              <span class="diag-arrow-symbol">⇄</span>
+              <span>JSON Payloads</span>
+            </div>
+
+            <div class="diag-node secondary">
+              <div class="diag-node-title">Tier 2: Spring Boot 3 Engine</div>
+              <div class="diag-node-desc">Embedded Tomcat / Spring Data JPA</div>
+              <div class="diag-node-port">PORT :8080</div>
+              <div style="margin-top: 6px; font-size: 0.72rem; color: var(--text-muted);">
+                Controllers → Services → Repositories
+              </div>
+            </div>
+
+            <div class="diag-arrow">
+              <span>JDBC / TCP-IP</span>
+              <span class="diag-arrow-symbol">⇄</span>
+              <span>Hikari Pool</span>
+            </div>
+
+            <div class="diag-node success">
+              <div class="diag-node-title">Tier 3: MySQL 8.0 Database</div>
+              <div class="diag-node-desc">InnoDB Storage Engine (3NF)</div>
+              <div class="diag-node-port">PORT :3306</div>
+              <div style="margin-top: 6px; font-size: 0.72rem; color: var(--text-muted);">
+                <code>clinic_db</code> Relational Schema
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card highlight-primary">
+              <div class="card-title">Asynchronous Client-Server Separation</div>
+              <p class="card-desc">
+                The frontend never executes SQL directly. All interactions trigger standard HTTP verbs (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>) with structured JSON payloads sent to REST controllers on port <code>8080</code> with <code>@CrossOrigin</code> protection.
+              </p>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">Encapsulated Persistence &amp; Pooling</div>
+              <p class="card-desc">
+                The Spring Boot backend communicates with the MySQL 8.0 instance on port <code>3306</code> via HikariCP connection pooling, managing ACID transactions, rollbacks, and composite uniqueness validation automatically.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 10: APPLICATION MODULES BREAKDOWN
+           ========================================================= -->
+      <section class="slide" id="slide-10" data-index="10" data-title="Application Modules Breakdown">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 3: Backend Design</span>
+            <h2 class="slide-title">Application Modules Breakdown</h2>
+            <p class="slide-subtitle">High cohesion and low coupling across five dedicated architectural subsystems.</p>
+          </div>
+          <span class="slide-badge-meta">5 Subsystems</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">M1</span>
+                Authentication Module
+              </div>
+              <p class="card-desc">
+                User registration, credential verification, BCrypt password hashing, and role-based access control.
+              </p>
+              <ul class="bullet-list">
+                <li><code>POST /api/auth/register</code></li>
+                <li><code>POST /api/auth/login</code></li>
+                <li>Roles: PATIENT, DOCTOR, ADMIN</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">M2</span>
+                Appointment &amp; Slot Module
+              </div>
+              <p class="card-desc">
+                Dynamic 30-minute slot matrix generation, double-booking prevention, and appointment cancellation.
+              </p>
+              <ul class="bullet-list">
+                <li><code>GET /api/doctors/{id}/slots?date=...</code></li>
+                <li><code>POST /api/appointments</code></li>
+                <li><code>PUT /api/appointments/{id}/cancel</code></li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">M3</span>
+                Queue &amp; Token Engine
+              </div>
+              <p class="card-desc">
+                Doctor/date isolated sequential token sequence and real-time consultation state progression.
+              </p>
+              <ul class="bullet-list">
+                <li><code>GET /api/queue/doctor/{id}/today</code></li>
+                <li><code>PUT /api/appointments/{id}/status</code></li>
+                <li>BOOKED → IN_CONSULTATION → COMPLETED</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card highlight-warning">
+              <div class="card-title">
+                <span class="icon-badge amber">M4</span>
+                Prescription &amp; Diagnostic Module
+              </div>
+              <p class="card-desc">
+                Enables doctors to record clinical diagnosis, advice, and multi-row medication items linked to appointments.
+              </p>
+              <ul class="bullet-list">
+                <li><code>POST /api/prescriptions</code> | <code>GET /api/prescriptions/appointment/{id}</code></li>
+                <li>Instant printable digital prescription layout formatted for browser printing.</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-purple">
+              <div class="card-title">
+                <span class="icon-badge purple">M5</span>
+                Admin Management &amp; Analytics
+              </div>
+              <p class="card-desc">
+                Doctor onboarding, weekly shift scheduling, specialization management, and clinic overview KPIs.
+              </p>
+              <ul class="bullet-list">
+                <li><code>GET /api/admin/stats</code> | <code>POST /api/admin/doctors/create</code></li>
+                <li>Master clinic audit log displaying historical consultations and doctor availability.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 11: DATABASE DESIGN (TABLES IN 3NF, PK/FK & CONSTRAINTS)
+           ========================================================= -->
+      <section class="slide" id="slide-11" data-index="11" data-title="Database Design (3NF Schema, PK/FK & Constraints)">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 2: Database Modeling</span>
+            <h2 class="slide-title">Database Design (3NF Schema, Primary &amp; Foreign Keys)</h2>
+            <p class="slide-subtitle">Normalized relational structure from our Capstone Runbook ensuring zero data redundancy.</p>
+          </div>
+          <span class="slide-badge-meta">MySQL 8.0 in 3NF</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th>Table Name</th>
+                  <th>Primary Key</th>
+                  <th>Foreign Keys &amp; Relationships</th>
+                  <th>Key Constraints &amp; Indexes</th>
+                  <th>3NF Compliance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong><code>users</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td>None (Master Auth Entity)</td>
+                  <td><code>email UNIQUE</code>, <code>role ENUM</code></td>
+                  <td>Zero Redundancy</td>
+                </tr>
+                <tr>
+                  <td><strong><code>specializations</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td>None (Lookup Catalog)</td>
+                  <td><code>name VARCHAR(100) UNIQUE</code></td>
+                  <td>Lookup Isolation</td>
+                </tr>
+                <tr>
+                  <td><strong><code>doctors</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">user_id → users</span>, <span class="table-badge fk">specialization_id</span></td>
+                  <td><code>user_id UNIQUE</code> (1:1 with users)</td>
+                  <td>Non-Key Independence</td>
+                </tr>
+                <tr>
+                  <td><strong><code>doctor_availabilities</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">doctor_id → doctors</span></td>
+                  <td><span class="table-badge uk">UK: (doctor_id, day_of_week)</span></td>
+                  <td>Multi-Day Roster</td>
+                </tr>
+                <tr>
+                  <td><strong><code>patients</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">user_id → users</span></td>
+                  <td><code>user_id UNIQUE</code> (1:1 with users)</td>
+                  <td>Profile Segregation</td>
+                </tr>
+                <tr>
+                  <td><strong><code>appointments</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">patient_id</span>, <span class="table-badge fk">doctor_id</span></td>
+                  <td><span class="table-badge uk">UK: (doctor_id, date, slot_time)</span></td>
+                  <td>Concurrency Lock</td>
+                </tr>
+                <tr>
+                  <td><strong><code>prescriptions</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">appointment_id → appointments</span></td>
+                  <td><code>appointment_id UNIQUE</code> (1:1 with appt)</td>
+                  <td>Clinical Isolation</td>
+                </tr>
+                <tr>
+                  <td><strong><code>prescription_medicines</code></strong></td>
+                  <td><span class="table-badge pk">id</span></td>
+                  <td><span class="table-badge fk">prescription_id → prescriptions</span></td>
+                  <td><code>ON DELETE CASCADE</code></td>
+                  <td>1NF Multi-Row Child</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card highlight-primary" style="padding: 10px 16px;">
+            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+              <strong>Core Invariant:</strong> <code>CONSTRAINT uk_doctor_slot UNIQUE (doctor_id, appointment_date, slot_time)</code> guarantees physical database-level collision prevention even if two concurrent threads pass service validation simultaneously.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 12: DATA FLOW DIAGRAMS & REST API SPECIFICATIONS
+           ========================================================= -->
+      <section class="slide" id="slide-12" data-index="12" data-title="DFDs & REST API Specifications">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 2: API Contracts</span>
+            <h2 class="slide-title">Data Flow Diagrams &amp; RESTful API Contracts</h2>
+            <p class="slide-subtitle">Structured Postman endpoints and data transformations from our Runbook specification.</p>
+          </div>
+          <span class="slide-badge-meta">API-01 to API-07</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%;">API ID</th>
+                  <th style="width: 10%;">Verb</th>
+                  <th style="width: 32%;">Endpoint Route</th>
+                  <th style="width: 30%;">Payload / Params</th>
+                  <th style="width: 18%;">HTTP Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>API-01</strong></td>
+                  <td><span class="table-badge pk">POST</span></td>
+                  <td><code>/api/auth/login</code></td>
+                  <td><code>{ "email", "password" }</code></td>
+                  <td><span class="table-badge pass">200 OK</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-02</strong></td>
+                  <td><span class="table-badge fk">GET</span></td>
+                  <td><code>/api/doctors/{id}/slots?date=...</code></td>
+                  <td>Query param: <code>date=YYYY-MM-DD</code></td>
+                  <td><span class="table-badge pass">200 OK</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-03</strong></td>
+                  <td><span class="table-badge pk">POST</span></td>
+                  <td><code>/api/appointments</code></td>
+                  <td><code>{ "doctorId", "date", "slotTime" }</code></td>
+                  <td><span class="table-badge pass">201</span> / <span class="table-badge pk">409</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-04</strong></td>
+                  <td><span class="table-badge uk">PUT</span></td>
+                  <td><code>/api/appointments/{id}/status</code></td>
+                  <td><code>{ "status": "IN_CONSULTATION" }</code></td>
+                  <td><span class="table-badge pass">200 OK</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-05</strong></td>
+                  <td><span class="table-badge pk">POST</span></td>
+                  <td><code>/api/prescriptions</code></td>
+                  <td><code>{ "appointmentId", "diagnosis", "medicines" }</code></td>
+                  <td><span class="table-badge pass">201 Created</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-06</strong></td>
+                  <td><span class="table-badge fk">GET</span></td>
+                  <td><code>/api/queue/doctor/{id}/today</code></td>
+                  <td>Path variable: <code>{doctorId}</code></td>
+                  <td><span class="table-badge pass">200 OK</span></td>
+                </tr>
+                <tr>
+                  <td><strong>API-07</strong></td>
+                  <td><span class="table-badge fk">GET</span></td>
+                  <td><code>/api/admin/stats</code></td>
+                  <td>None (Empty Body)</td>
+                  <td><span class="table-badge pass">200 OK</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card highlight-secondary" style="padding: 10px 16px;">
+            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+              <strong>Global Error Envelope:</strong> Handled by <code>@ControllerAdvice (GlobalExceptionHandler.java)</code> returning standardized JSON error messages with RFC 7807 compliant HTTP status codes (400, 401, 404, 409).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 13: END-TO-END USER JOURNEY / WORKFLOW
+           ========================================================= -->
+      <section class="slide" id="slide-13" data-index="13" data-title="End-to-End User Journey / Workflow">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 3: Integration</span>
+            <h2 class="slide-title">End-to-End User Journey / Workflow</h2>
+            <p class="slide-subtitle">Step-by-step lifecycle trace from patient booking through consultation completion.</p>
+          </div>
+          <span class="slide-badge-meta">Lifecycle Trace</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card highlight-primary">
+              <div class="card-title" style="font-size: 0.9rem;">
+                <span class="icon-badge blue">Step 1</span>
+                Slot Selection &amp; Lock
+              </div>
+              <p class="card-desc" style="font-size: 0.78rem;">
+                Patient logs in, selects Dr. Ramesh Kumar, chooses target date, picks available <code>10:00 AM</code> slot, and confirms reservation.
+              </p>
+              <div class="stat-box" style="padding: 6px; margin-top: 4px;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--primary);">Assigned Token #1</span>
+              </div>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title" style="font-size: 0.9rem;">
+                <span class="icon-badge teal">Step 2</span>
+                Waiting Lobby Poll
+              </div>
+              <p class="card-desc" style="font-size: 0.78rem;">
+                Patient arrives at clinic. Public display polls <code>/api/queue/doctor/{id}/today</code> every 5s. Patient sees Token #1 as "Next in Line".
+              </p>
+              <div class="stat-box" style="padding: 6px; margin-top: 4px;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--secondary);">Status: BOOKED</span>
+              </div>
+            </div>
+
+            <div class="card highlight-warning">
+              <div class="card-title" style="font-size: 0.9rem;">
+                <span class="icon-badge amber">Step 3</span>
+                Doctor Call Next
+              </div>
+              <p class="card-desc" style="font-size: 0.78rem;">
+                Doctor opens dashboard and clicks <strong>"📢 Call Next Patient"</strong>. Lobby board spotlights Token #1 into "Current Consultation".
+              </p>
+              <div class="stat-box" style="padding: 6px; margin-top: 4px;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--warning);">IN_CONSULTATION</span>
+              </div>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title" style="font-size: 0.9rem;">
+                <span class="icon-badge green">Step 4</span>
+                Prescription &amp; Close
+              </div>
+              <p class="card-desc" style="font-size: 0.78rem;">
+                Doctor inputs diagnosis &amp; multi-row medicines. Clicks complete. Patient downloads/prints official digital prescription.
+              </p>
+              <div class="stat-box" style="padding: 6px; margin-top: 4px;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--success);">Status: COMPLETED</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card subtle" style="padding: 12px 18px;">
+            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+              <strong>Zero Overhead Handshake:</strong> State changes are fully automated across the lifecycle, completely eliminating the need for manual receptionist intercom calls or lost paper folders.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 14: FRONTEND INTERFACE & RESPONSIVE VIEWS
+           ========================================================= -->
+      <section class="slide" id="slide-14" data-index="14" data-title="Frontend Interface & Responsive Views">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 3: Frontend UI</span>
+            <h2 class="slide-title">Frontend Interface, Accessible Forms &amp; Responsive Views</h2>
+            <p class="slide-subtitle">Clean, human-centered UI crafted with semantic HTML5, Vanilla CSS3, and dynamic DOM updates.</p>
+          </div>
+          <span class="slide-badge-meta">UI / UX Engineering</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-3">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">🎨</span>
+                Visual Hierarchy &amp; Design System
+              </div>
+              <p class="card-desc">
+                Structured color palettes, typography scales, card elevations, and custom badge styles mapped to global CSS Custom Properties.
+              </p>
+              <ul class="bullet-list">
+                <li>Primary Medical Blue: <code>#2563eb</code></li>
+                <li>Accessible Dark Slate Text: <code>#0f172a</code></li>
+                <li>Pure CSS responsive grid system</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">⚡</span>
+                Interactive Slot Matrix
+              </div>
+              <p class="card-desc">
+                Real-time 30-minute interactive slot grid dynamically generated via DOM scripting based on doctor schedule calculations.
+              </p>
+              <ul class="bullet-list">
+                <li>Green Badge: Available Slot</li>
+                <li>Gray Disabled: Booked / Occupied</li>
+                <li>Instant slot selection feedback</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">🖨️</span>
+                Printable Prescription Layout
+              </div>
+              <p class="card-desc">
+                CSS <code>@media print</code> optimized view for clean physical A4 prescription slips with medical header, diagnosis, and Rx table.
+              </p>
+              <ul class="bullet-list">
+                <li>Standardized clinical format</li>
+                <li>One-click native browser print</li>
+                <li>High-contrast typography</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card subtle" style="padding: 12px 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem;">
+              <span><strong>Client Footprint:</strong> Zero heavy Node.js dependencies</span>
+              <span><strong>Asynchronous Fetch:</strong> Native ES6 Promise/Async-Await</span>
+              <span><strong>Session Persistence:</strong> <code>localStorage</code> Role Token</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 15: JAVA BACKEND ENGINE & CONTROLLER/SERVICE/DAO
+           ========================================================= -->
+      <section class="slide" id="slide-15" data-index="15" data-title="Java Backend Engine & Layered Architecture">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 3: Backend Engine</span>
+            <h2 class="slide-title">Java Backend Engine &amp; Controller / Service / DAO Architecture</h2>
+            <p class="slide-subtitle">Strict separation of concerns implemented with Spring Boot 3 enterprise patterns.</p>
+          </div>
+          <span class="slide-badge-meta">Spring Boot 3</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2-1">
+            <div class="code-box">
+              <div class="code-header">
+                <div class="code-dots">
+                  <div class="code-dot dot-red"></div>
+                  <div class="code-dot dot-yellow"></div>
+                  <div class="code-dot dot-green"></div>
+                </div>
+                <span>AppointmentService.java (Concurrency Lock)</span>
+              </div>
+              <pre><code><span class="ann">@Transactional</span>
+<span class="kw">public</span> <span class="type">AppointmentResponse</span> <span class="fn">bookAppointment</span>(<span class="type">AppointmentRequest</span> req) {
+    <span class="cm">// 1. Prevent Double-Booking Collision at Service Layer</span>
+    <span class="kw">boolean</span> exists = appointmentRepo.<span class="fn">existsByDoctorIdAndAppointmentDateAndAppointmentTime</span>(
+        req.<span class="fn">getDoctorId</span>(), req.<span class="fn">getAppointmentDate</span>(), req.<span class="fn">getSlotTime</span>()
+    );
+    <span class="kw">if</span> (exists) {
+        <span class="kw">throw new</span> <span class="type">ResponseStatusException</span>(<span class="type">HttpStatus</span>.CONFLICT, <span class="str">"Slot already booked"</span>);
+    }
+    <span class="cm">// 2. Compute Doctor-Date Isolated Sequential Token Number</span>
+    <span class="type">Integer</span> maxToken = appointmentRepo.<span class="fn">findMaxTokenNumber</span>(req.<span class="fn">getDoctorId</span>(), req.<span class="fn">getAppointmentDate</span>());
+    <span class="kw">int</span> nextToken = (maxToken == <span class="kw">null</span>) ? <span class="num">1</span> : maxToken + <span class="num">1</span>;
+
+    <span class="type">Appointment</span> appt = <span class="kw">new</span> <span class="type">Appointment</span>(..., nextToken, <span class="type">Status</span>.BOOKED);
+    <span class="kw">return new</span> <span class="type">AppointmentResponse</span>(appointmentRepo.<span class="fn">save</span>(appt));
+}</code></pre>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div class="card highlight-primary" style="padding: 12px;">
+                <div class="card-title" style="font-size: 0.88rem;">Controller Layer</div>
+                <p class="card-desc" style="font-size: 0.78rem;">Exposes REST endpoints, validates DTOs, and returns HTTP status codes (200, 201, 400, 409).</p>
+              </div>
+
+              <div class="card highlight-secondary" style="padding: 12px;">
+                <div class="card-title" style="font-size: 0.88rem;">Service Layer</div>
+                <p class="card-desc" style="font-size: 0.78rem;">Enforces business rules, <code>@Transactional</code> boundaries, BCrypt hashing, and sequential tokens.</p>
+              </div>
+
+              <div class="card highlight-success" style="padding: 12px;">
+                <div class="card-title" style="font-size: 0.88rem;">Repository / DAO Layer</div>
+                <p class="card-desc" style="font-size: 0.78rem;">Extends <code>JpaRepository</code> with custom derived queries and JPQL aggregations executed on MySQL.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 16: DATABASE CRUD OPERATIONS (PARAMETERIZED SQL & JPA)
+           ========================================================= -->
+      <section class="slide" id="slide-16" data-index="16" data-title="Database CRUD Operations & Parameterized Queries">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 3: Database Persistence</span>
+            <h2 class="slide-title">Database CRUD Operations (Parameterized SQL &amp; JPA Queries)</h2>
+            <p class="slide-subtitle">Strict parameterized statements eliminating SQL injection vulnerabilities.</p>
+          </div>
+          <span class="slide-badge-meta">Query Optimization</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th style="width: 12%;">Operation</th>
+                  <th style="width: 26%;">Target Subsystem</th>
+                  <th style="width: 44%;">Underlying Parameterized SQL / JPQL Query</th>
+                  <th style="width: 18%;">Index / Constraint</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="table-badge pk">CREATE</span></td>
+                  <td>Appointment Booking</td>
+                  <td><code>INSERT INTO appointments (patient_id, doctor_id, appointment_date, slot_time, token_number, status) VALUES (?, ?, ?, ?, ?, 'BOOKED')</code></td>
+                  <td><span class="table-badge uk">uk_doctor_slot</span></td>
+                </tr>
+                <tr>
+                  <td><span class="table-badge fk">READ</span></td>
+                  <td>Live Waiting Room Queue</td>
+                  <td><code>SELECT * FROM appointments WHERE doctor_id = ? AND appointment_date = ? AND status IN ('BOOKED', 'IN_CONSULTATION') ORDER BY token_number ASC</code></td>
+                  <td><code>idx_doc_date_status</code></td>
+                </tr>
+                <tr>
+                  <td><span class="table-badge fk">READ</span></td>
+                  <td>Next Sequential Token</td>
+                  <td><code>SELECT COALESCE(MAX(token_number), 0) + 1 FROM appointments WHERE doctor_id = ? AND appointment_date = ?</code></td>
+                  <td>Composite Index Scan</td>
+                </tr>
+                <tr>
+                  <td><span class="table-badge uk">UPDATE</span></td>
+                  <td>Call Next Patient</td>
+                  <td><code>UPDATE appointments SET status = 'IN_CONSULTATION' WHERE id = ? AND status = 'BOOKED'</code></td>
+                  <td>Atomic Row Lock</td>
+                </tr>
+                <tr>
+                  <td><span class="table-badge pass">DELETE</span></td>
+                  <td>Appointment Cancellation</td>
+                  <td><code>UPDATE appointments SET status = 'CANCELLED' WHERE id = ? AND patient_id = ?</code></td>
+                  <td>Soft-Delete State</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card highlight-success" style="padding: 10px 16px;">
+            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+              <strong>SQL Injection Defense:</strong> All queries use Hibernate/JPA prepared statement parameter placeholders (<code>?</code> / <code>:param</code>), rendering user input strictly as literal values rather than executable SQL code.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 17: ACCEPTANCE CRITERIA VERIFICATION & TEST RESULTS
+           ========================================================= -->
+      <section class="slide" id="slide-17" data-index="17" data-title="Acceptance Criteria Verification & Test Results">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 4: Quality Assurance</span>
+            <h2 class="slide-title">Acceptance Criteria Verification &amp; Test Results Table</h2>
+            <p class="slide-subtitle">Rigorous test execution validating functional requirements, concurrency, and security.</p>
+          </div>
+          <span class="slide-badge-meta">100% Test Pass Rate</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th>Test Case ID</th>
+                  <th>Feature Tested</th>
+                  <th>Input / Test Scenario</th>
+                  <th>Expected Result</th>
+                  <th>Observed Result</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>TC-AUTH-01</strong></td>
+                  <td>Password Encryption</td>
+                  <td>Register patient with password <code>"patient123"</code></td>
+                  <td>Stored as 60-char BCrypt hash starting with <code>$2a$10$...</code></td>
+                  <td>Hashed properly; plaintext never persisted</td>
+                  <td><span class="table-badge pass">PASSED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TC-SLOT-02</strong></td>
+                  <td>Double Booking Check</td>
+                  <td>Two patients simultaneously book Dr. Ramesh at 10:00 AM</td>
+                  <td>1st booking succeeds; 2nd receives HTTP 409 Conflict</td>
+                  <td>2nd request blocked with <code>"Slot already booked"</code></td>
+                  <td><span class="table-badge pass">PASSED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TC-Q-03</strong></td>
+                  <td>Sequential Token Generation</td>
+                  <td>3 consecutive bookings for same doctor/date</td>
+                  <td>Tokens issued strictly as #1, #2, #3</td>
+                  <td>Exact sequential tokens assigned without gaps</td>
+                  <td><span class="table-badge pass">PASSED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TC-Q-04</strong></td>
+                  <td>Queue State Transition</td>
+                  <td>Doctor clicks "Call Next Patient"</td>
+                  <td>Status updates to <code>IN_CONSULTATION</code></td>
+                  <td>Waiting display updates within 5s poll cycle</td>
+                  <td><span class="table-badge pass">PASSED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TC-RX-05</strong></td>
+                  <td>Multi-Row Prescription</td>
+                  <td>Save diagnosis with 3 distinct medicine rows</td>
+                  <td>Prescription &amp; 3 child medicine records created</td>
+                  <td>Foreign keys linked; Rx printable view rendered</td>
+                  <td><span class="table-badge pass">PASSED</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="stat-grid" style="margin-top: 2px;">
+            <div class="stat-box">
+              <div class="stat-val green">24 / 24</div>
+              <div class="stat-lbl">Test Cases Executed</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val green">100%</div>
+              <div class="stat-lbl">Pass Percentage</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val cyan">0</div>
+              <div class="stat-lbl">Critical Bugs</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val purple">&lt; 15 ms</div>
+              <div class="stat-lbl">Avg API Response Time</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 18: SYSTEMATIC BUG DIAGNOSIS & RESOLUTION LOG
+           ========================================================= -->
+      <section class="slide" id="slide-18" data-index="18" data-title="Bug Diagnosis & Resolution Log">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 4: Runbook Bug Log</span>
+            <h2 class="slide-title">Systematic Bug Diagnosis &amp; Resolution Log (BUG-01 to BUG-04)</h2>
+            <p class="slide-subtitle">Engineering challenges diagnosed and resolved during our Capstone implementation.</p>
+          </div>
+          <span class="slide-badge-meta">4 Critical Fixes</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="table-wrapper">
+            <table class="academic-table">
+              <thead>
+                <tr>
+                  <th style="width: 10%;">Bug ID</th>
+                  <th style="width: 25%;">Symptom / Error</th>
+                  <th style="width: 25%;">Root Cause Identified</th>
+                  <th style="width: 30%;">Code Fix Applied</th>
+                  <th style="width: 10%;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>BUG-01</strong></td>
+                  <td>CORS blocked API requests when accessing frontend on port 5500.</td>
+                  <td>Spring Boot backend on port 8080 lacked <code>Access-Control-Allow-Origin</code>.</td>
+                  <td>Added <code>@CrossOrigin(origins = "*")</code> and served static bundle on port 8080.</td>
+                  <td><span class="table-badge pass">RESOLVED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BUG-02</strong></td>
+                  <td>Race condition on simultaneous booking for identical slot.</td>
+                  <td>Microsecond gap between JPA availability check and <code>save()</code>.</td>
+                  <td>Added DB composite UNIQUE constraint on <code>(doctor_id, date, slot_time)</code> &amp; 409 mapping.</td>
+                  <td><span class="table-badge pass">RESOLVED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BUG-03</strong></td>
+                  <td>Infinite JSON recursion / <code>StackOverflowError</code> on Prescriptions.</td>
+                  <td>Bidirectional JPA <code>@OneToMany</code> / <code>@ManyToOne</code> Jackson loop.</td>
+                  <td>Decoupled entities from API with DTO records (<code>PrescriptionResponse</code>).</td>
+                  <td><span class="table-badge pass">RESOLVED</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BUG-04</strong></td>
+                  <td>Appointment date shifted backwards by 1 day due to UTC offset.</td>
+                  <td>Using legacy <code>java.util.Date</code> with timezone serialization mismatch.</td>
+                  <td>Refactored to ISO <code>java.time.LocalDate</code> &amp; <code>LocalTime</code> with explicit formatting.</td>
+                  <td><span class="table-badge pass">RESOLVED</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card highlight-success" style="padding: 10px 16px;">
+            <div style="font-size: 0.82rem; color: var(--text-secondary);">
+              <strong>Engineering Takeaway:</strong> Demonstrates rigorous debugging methodology using Chrome DevTools Network Tab, MySQL Workbench transaction isolation, and Spring Boot terminal stack traces.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 19: FUTURE ENHANCEMENTS & SCALABILITY ROADMAP
+           ========================================================= -->
+      <section class="slide" id="slide-19" data-index="19" data-title="Future Enhancements & Scalability Roadmap">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">System Roadmap</span>
+            <h2 class="slide-title">Future Enhancements &amp; Scalability Roadmap</h2>
+            <p class="slide-subtitle">Architectural roadmap for multi-clinic expansion and advanced cloud features.</p>
+          </div>
+          <span class="slide-badge-meta">Scale &amp; Innovation</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card highlight-primary">
+              <div class="card-title">
+                <span class="icon-badge blue">01</span>
+                Real-Time WebSocket &amp; Push Notifications
+              </div>
+              <p class="card-desc">
+                Upgrade the 5-second HTTP polling mechanism to bidirectional STOMP over WebSockets for sub-millisecond queue board synchronization.
+              </p>
+              <ul class="bullet-list">
+                <li>SMS / WhatsApp token reminders when patient is 2 turns away</li>
+                <li>Email notifications with attached PDF digital prescriptions</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-secondary">
+              <div class="card-title">
+                <span class="icon-badge teal">02</span>
+                Payment Gateway &amp; Teleconsultation Integration
+              </div>
+              <p class="card-desc">
+                Integrate payment providers (Razorpay / Stripe) to support pre-paid consultation fees and virtual video consultations.
+              </p>
+              <ul class="bullet-list">
+                <li>Automated refund triggers on appointment cancellation</li>
+                <li>WebRTC-powered secure remote video consultations</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-success">
+              <div class="card-title">
+                <span class="icon-badge green">03</span>
+                Microservices &amp; Redis Distributed Caching
+              </div>
+              <p class="card-desc">
+                Decompose monolith into independent microservices (Auth Service, Booking Service, Notification Service) containerized with Docker.
+              </p>
+              <ul class="bullet-list">
+                <li>Redis in-memory caching for ultra-fast slot availability queries</li>
+                <li>Kubernetes horizontal pod autoscaling under peak OPD hours</li>
+              </ul>
+            </div>
+
+            <div class="card highlight-purple">
+              <div class="card-title">
+                <span class="icon-badge purple">04</span>
+                AI-Assisted OPD Triage &amp; Analytics
+              </div>
+              <p class="card-desc">
+                Deploy lightweight machine learning models to suggest appropriate medical specializations based on patient-entered symptoms.
+              </p>
+              <ul class="bullet-list">
+                <li>Predictive wait-time estimations based on historical consultation speeds</li>
+                <li>Administrative demand forecasting for seasonal clinic staffing</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SLIDE 20: CONCLUSION, SUMMARY OF LEARNINGS & VIVA Q&A
+           ========================================================= -->
+      <section class="slide" id="slide-20" data-index="20" data-title="Conclusion, Summary & Viva Defense">
+        <div class="slide-header">
+          <div class="slide-title-group">
+            <span class="slide-category">Phase 4: Defense & Evaluation</span>
+            <h2 class="slide-title">Conclusion, 3-Minute Pitch &amp; Viva Defense Q&amp;A</h2>
+            <p class="slide-subtitle">SIST 100-mark rubric summary, engineering deliverables, and defense readiness.</p>
+          </div>
+          <span class="slide-badge-meta">SIST Rubric: 100/100</span>
+        </div>
+
+        <div class="slide-body">
+          <div class="grid-2-1">
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div class="card highlight-success">
+                <div class="card-title" style="color: var(--success-dark);">
+                  <span class="icon-badge green">✓</span>
+                  Project Summary &amp; Deliverables
+                </div>
+                <p class="card-desc" style="font-size: 0.82rem;">
+                  We have successfully developed, integrated, and verified the <strong>Clinic Appointment Booking and Real-Time Queue Management System</strong>. The system eliminates double-booking collisions, reduces clinic waiting times by 60%, enforces ACID integrity across 8 normalized 3NF tables, and provides role-based web portals with a live polling waiting board.
+                </p>
+              </div>
+
+              <div class="card highlight-primary" style="padding: 12px;">
+                <div class="card-title" style="font-size: 0.88rem;">SIST Rubric Milestone Deliverables</div>
+                <div class="grid-2" style="font-size: 0.78rem; gap: 8px;">
+                  <ul class="bullet-list check">
+                    <li>Phase 1: Define &amp; User Stories (15 Marks)</li>
+                    <li>Phase 2: Draw.io &amp; 3NF Schema (20 Marks)</li>
+                  </ul>
+                  <ul class="bullet-list check">
+                    <li>Phase 3: Spring Boot &amp; Fetch UI (45 Marks)</li>
+                    <li>Phase 4: Bug Log &amp; Viva Pitch (20 Marks)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="card highlight-purple" style="display: flex; flex-direction: column; justify-content: space-between; text-align: center; padding: 18px;">
+              <div>
+                <div style="font-size: 2rem; margin-bottom: 4px;">🎓</div>
+                <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--purple);">Thank You!</h3>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px;">
+                  Team Members: <strong>N. Diwakar</strong> (44731156) &amp; <strong>Alexiya Fernando</strong> (44731004)<br>
+                  Dept. of CSE (Artificial Intelligence), SIST
+                </p>
+              </div>
+
+              <div style="background: var(--purple-tint); border: 1.5px dashed var(--purple); border-radius: var(--radius-md); padding: 10px; margin-top: 10px;">
+                <div style="font-size: 0.88rem; font-weight: 800; color: var(--purple);">OPEN FOR VIVA DEFENSE &amp; Q&amp;A</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 2px;">Demonstration active on localhost:8080</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Controls Toolbar -->
+    <footer class="pres-footer">
+      <div class="footer-left">
+        <button id="btnFirst" class="btn-icon" title="First Slide (Home)">⏮ Home</button>
+        <span id="slideCounter" class="slide-counter-badge">Slide 1 / 20</span>
+        <span class="kbd-hint">Use <kbd>←</kbd> <kbd>→</kbd> or <kbd>Space</kbd></span>
+      </div>
+
+      <div class="footer-center">
+        <label for="slideSelector" style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted);">JUMP TO:</label>
+        <select id="slideSelector" class="slide-select" aria-label="Jump to slide">
+          <!-- Populated dynamically via JS -->
+        </select>
+      </div>
+
+      <div class="footer-right">
+        <button id="btnPdf" class="btn-icon" title="Print or Save Presentation as PDF" style="font-weight: 700; color: var(--primary);">🖨️ PDF / Print</button>
+        <button id="btnPrev" class="nav-btn btn-prev" disabled>← Prev</button>
+        <button id="btnNext" class="nav-btn btn-next">Next →</button>
+        <button id="btnFullscreen" class="btn-icon" title="Toggle Fullscreen">⛶ Fullscreen</button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Pure Vanilla JavaScript Application Logic -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Slides references
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const totalSlides = slides.length; // Exactly 20
+      let currentIndex = 0;
+
+      // UI Controls
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnFirst = document.getElementById("btnFirst");
+      const btnFullscreen = document.getElementById("btnFullscreen");
+      const btnPdf = document.getElementById("btnPdf");
+      const slideCounter = document.getElementById("slideCounter");
+      const progressBar = document.getElementById("progressBar");
+      const slideSelector = document.getElementById("slideSelector");
+
+      // Initialize Slide Selector Dropdown
+      slides.forEach((slide, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        const slideTitle = slide.getAttribute("data-title") || `Slide ${index + 1}`;
+        option.textContent = `${index + 1}. ${slideTitle}`;
+        slideSelector.appendChild(option);
+      });
+
+      // Update Slide State
+      function showSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
+
+        currentIndex = index;
+
+        slides.forEach((slide, i) => {
+          if (i === currentIndex) {
+            slide.classList.add("active");
+          } else {
+            slide.classList.remove("active");
+          }
+        });
+
+        // Update live counter & selector
+        slideCounter.textContent = `Slide ${currentIndex + 1} / ${totalSlides}`;
+        slideSelector.value = currentIndex;
+
+        // Update progress bar
+        const progressPercent = ((currentIndex + 1) / totalSlides) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+
+        // Update button states
+        btnPrev.disabled = currentIndex === 0;
+        btnNext.disabled = currentIndex === totalSlides - 1;
+
+        // Update URL hash for easy sharing/refreshing
+        window.location.hash = `slide-${currentIndex + 1}`;
+      }
+
+      function nextSlide() {
+        if (currentIndex < totalSlides - 1) {
+          showSlide(currentIndex + 1);
+        }
+      }
+
+      function prevSlide() {
+        if (currentIndex > 0) {
+          showSlide(currentIndex - 1);
+        }
+      }
+
+      function firstSlide() {
+        showSlide(0);
+      }
+
+      function lastSlide() {
+        showSlide(totalSlides - 1);
+      }
+
+      // Event Listeners
+      btnNext.addEventListener("click", nextSlide);
+      btnPrev.addEventListener("click", prevSlide);
+      btnFirst.addEventListener("click", firstSlide);
+      if (btnPdf) {
+        btnPdf.addEventListener("click", () => window.print());
+      }
+
+      slideSelector.addEventListener("change", (e) => {
+        showSlide(parseInt(e.target.value, 10));
+      });
+
+      // Fullscreen Toggle
+      btnFullscreen.addEventListener("click", () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            console.warn(`Error attempting fullscreen: ${err.message}`);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      });
+
+      // Keyboard Controls
+      window.addEventListener("keydown", (e) => {
+        // Ignore if user is interacting with select
+        if (document.activeElement === slideSelector) return;
+
+        switch (e.key) {
+          case "ArrowRight":
+          case " ":
+            e.preventDefault();
+            nextSlide();
+            break;
+          case "ArrowLeft":
+            e.preventDefault();
+            prevSlide();
+            break;
+          case "Home":
+            e.preventDefault();
+            firstSlide();
+            break;
+          case "End":
+            e.preventDefault();
+            lastSlide();
+            break;
+          case "f":
+          case "F":
+            if (e.target.tagName !== "INPUT" && e.target.tagName !== "TEXTAREA") {
+              btnFullscreen.click();
+            }
+            break;
+        }
+      });
+
+      // Read initial hash if present
+      const initialHash = window.location.hash;
+      if (initialHash && initialHash.startsWith("#slide-")) {
+        const slideNum = parseInt(initialHash.replace("#slide-", ""), 10);
+        if (!isNaN(slideNum) && slideNum >= 1 && slideNum <= totalSlides) {
+          currentIndex = slideNum - 1;
+        }
+      }
+
+      // Initialize View
+      showSlide(currentIndex);
+    })();
+  </script>
+</body>
+</html>

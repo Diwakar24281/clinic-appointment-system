@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container" style="max-width: 800px;">
+        <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+                <h2 class="card-title">📅 Schedule Your Consultation</h2>
+                <a href="/pages/doctors.html" class="btn btn-sm btn-outline">Change Doctor</a>
+            </div>
+
+            <!-- Doctor Summary Banner -->
+            <div style="background: #f8fafc; border: 1px solid var(--border); padding: 1.2rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div>
+                    <h3 id="docName" style="color: var(--secondary); font-size: 1.2rem;">Doctor Name</h3>
+                    <p id="docSpec" style="color: var(--primary); font-weight: 600; font-size: 0.9rem;">Specialization</p>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Consultation Fee</span>
+                    <div id="docFee" style="font-size: 1.3rem; font-weight: 800; color: var(--secondary);">₹0.00</div>
+                </div>
+            </div>
+
+            <!-- Date Picker -->
+            <div class="form-group">
+                <label class="form-label" for="bookingDate">Select Appointment Date</label>
+                <input type="date" id="bookingDate" class="form-control" onchange="loadAvailableSlots()" style="max-width: 300px;">
+                <small id="workingHoursNotice" style="display: block; margin-top: 0.4rem; color: var(--text-muted); font-size: 0.85rem;"></small>
+            </div>
+
+            <!-- 30-Minute Slot Picker -->
+            <div style="margin-top: 1.5rem;">
+                <label class="form-label">Select 30-Minute Time Slot</label>
+                <div style="display: flex; gap: 1rem; font-size: 0.82rem; margin-bottom: 0.5rem; color: var(--text-muted);">
+                    <span><span style="display:inline-block; width:12px; height:12px; background:#ecfdf5; border:1px solid #6ee7b7; border-radius:3px;"></span> Available</span>
+                    <span><span style="display:inline-block; width:12px; height:12px; background:#0284c7; border-radius:3px;"></span> Selected</span>
+                    <span><span style="display:inline-block; width:12px; height:12px; background:#f1f5f9; border:1px solid #cbd5e1; border-radius:3px;"></span> Booked/Past</span>
+                </div>
+
+                <div id="slotGridContainer" class="slot-grid">
+                    <!-- Dynamically populated 30-min slot buttons -->
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1.5rem; display: flex; justify-content: flex-end;">
+                <button type="button" id="confirmBookingBtn" class="btn btn-primary" onclick="submitBooking()" disabled style="padding: 0.75rem 2rem;">
+                    Confirm & Book Slot
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div id="bookingSuccessModal" class="modal-overlay">
+        <div class="modal-content" style="text-align: center;">
+            <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🎉</div>
+            <h2 style="color: var(--secondary); margin-bottom: 0.5rem;">Appointment Confirmed!</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Your consultation slot and queue token have been generated.</p>
+
+            <div style="background: var(--primary-light); padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                <span style="font-size: 0.85rem; color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Your Queue Token Number</span>
+                <div id="modalTokenNumber" style="font-size: 3rem; font-weight: 900; color: var(--primary); margin: 0.3rem 0;">#--</div>
+                <p id="modalDocName" style="font-weight: 600; color: var(--secondary);"></p>
+                <p id="modalDateTime" style="font-size: 0.9rem; color: var(--text-muted);"></p>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/pages/my-appointments.html" class="btn btn-primary" style="flex: 1;">View My Bookings</a>
+                <a href="/pages/waiting-room.html" class="btn btn-secondary" style="flex: 1;">Track Live Queue</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/patient.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initBookingPage();
+        });
+    </script>
+</body>
+</html>

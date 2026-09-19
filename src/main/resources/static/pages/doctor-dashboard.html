@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <div class="container">
+        <!-- Call Next Patient Master Banner -->
+        <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; margin-bottom: 2rem; padding: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+                <div>
+                    <span style="background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Doctor Consultation Suite</span>
+                    <h2 id="docGreeting" style="font-size: 1.8rem; margin-top: 0.5rem;">Today's Patient Queue</h2>
+                    <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 0.2rem;">Manage waiting patients and call tokens into consultation.</p>
+                </div>
+                <button type="button" id="callNextBtn" class="btn btn-success" onclick="callNextPatient()" style="font-size: 1.1rem; padding: 0.85rem 1.8rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
+                    📢 Call Next Patient
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI Status Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: #e0e7ff; color: #4338ca;">👨‍⚕️</div>
+                <div>
+                    <div class="stat-val" id="statCurrentToken">None</div>
+                    <div class="stat-label">Current in Cabin</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--warning-light); color: var(--warning);">🎟️</div>
+                <div>
+                    <div class="stat-val" id="statNextToken">None</div>
+                    <div class="stat-label">Next Waiting Token</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">⏳</div>
+                <div>
+                    <div class="stat-val" id="statWaitingCount">0</div>
+                    <div class="stat-label">Total Patients Waiting</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Queue Table Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Patient Queue List</h3>
+                <div style="display: flex; align-items: center; gap: 0.8rem;">
+                    <label style="font-size: 0.85rem; color: var(--text-muted);">Date:</label>
+                    <input type="date" id="filterDate" class="form-control" onchange="loadDoctorQueue()" style="padding: 0.35rem 0.6rem; font-size: 0.85rem; width: auto;">
+                    <button class="btn btn-sm btn-outline" onclick="loadDoctorQueue()">🔄 Refresh</button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Patient Name & Phone</th>
+                            <th>Slot Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="doctorQueueTable">
+                        <!-- Loaded dynamically via doctor.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/doctor.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (checkAuthGuard(['DOCTOR'])) {
+                const user = getCurrentUser();
+                document.getElementById('docGreeting').innerText = `Welcome, ${user.name}`;
+                const dateInput = document.getElementById('filterDate');
+                dateInput.value = new Date().toISOString().split('T')[0];
+                loadDoctorQueue();
+            }
+        });
+    </script>
+</body>
+</html>
