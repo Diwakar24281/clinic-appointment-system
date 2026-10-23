@@ -84,8 +84,8 @@ public class AdminService {
         doctor.setAvailable(true);
         Doctor savedDoctor = doctorRepository.save(doctor);
 
-        // 3. Save Availabilities if provided
-        if (request.getAvailabilities() != null) {
+        // 3. Save Availabilities if provided, else assign default Mon-Sat 9AM-10PM
+        if (request.getAvailabilities() != null && !request.getAvailabilities().isEmpty()) {
             for (DoctorAvailabilityDto aDto : request.getAvailabilities()) {
                 DoctorAvailability da = new DoctorAvailability(
                         savedDoctor,
@@ -94,6 +94,19 @@ public class AdminService {
                         aDto.getEndTime()
                 );
                 availabilityRepository.save(da);
+            }
+        } else {
+            java.time.DayOfWeek[] defaultDays = {
+                    java.time.DayOfWeek.MONDAY, java.time.DayOfWeek.TUESDAY, java.time.DayOfWeek.WEDNESDAY,
+                    java.time.DayOfWeek.THURSDAY, java.time.DayOfWeek.FRIDAY, java.time.DayOfWeek.SATURDAY
+            };
+            for (java.time.DayOfWeek day : defaultDays) {
+                availabilityRepository.save(new DoctorAvailability(
+                        savedDoctor,
+                        day,
+                        java.time.LocalTime.of(9, 0),
+                        java.time.LocalTime.of(22, 0)
+                ));
             }
         }
 
@@ -123,6 +136,20 @@ public class AdminService {
             doctor.setAvailable(request.getIsAvailable());
         }
 
+        if (request.getPhone() != null && !request.getPhone().trim().isEmpty()) {
+            doctor.setPhone(request.getPhone().trim());
+        }
+
+        if (request.getApprovalStatus() != null && !request.getApprovalStatus().trim().isEmpty()) {
+            String newStatus = request.getApprovalStatus().trim().toUpperCase();
+            doctor.setApprovalStatus(newStatus);
+            if ("APPROVED".equals(newStatus)) {
+                doctor.setAvailable(true);
+            } else if ("INACTIVE".equals(newStatus)) {
+                doctor.setAvailable(false);
+            }
+        }
+
         Doctor updated = doctorRepository.save(doctor);
 
         // Update Availabilities if provided
@@ -137,6 +164,23 @@ public class AdminService {
                 );
                 availabilityRepository.save(da);
             }
+        } else if ("APPROVED".equals(updated.getApprovalStatus())) {
+            // If approved and no availability records exist, assign default 9 AM - 10 PM
+            List<DoctorAvailability> existing = availabilityRepository.findByDoctorId(doctorId);
+            if (existing.isEmpty()) {
+                java.time.DayOfWeek[] defaultDays = {
+                        java.time.DayOfWeek.MONDAY, java.time.DayOfWeek.TUESDAY, java.time.DayOfWeek.WEDNESDAY,
+                        java.time.DayOfWeek.THURSDAY, java.time.DayOfWeek.FRIDAY, java.time.DayOfWeek.SATURDAY
+                };
+                for (java.time.DayOfWeek day : defaultDays) {
+                    availabilityRepository.save(new DoctorAvailability(
+                            updated,
+                            day,
+                            java.time.LocalTime.of(9, 0),
+                            java.time.LocalTime.of(22, 0)
+                    ));
+                }
+            }
         }
 
         return doctorService.mapToDto(updated);
@@ -148,10 +192,42 @@ public class AdminService {
 
     @Transactional
     public Specialization createSpecialization(Specialization specialization) {
-        if (specializationRepository.existsByNameIgnoreCase(specialization.getName())) {
-            throw new BadRequestException("Specialization already exists with name: " + specialization.getName());
+        if (specialization.getName() == null || specialization.getName().trim().isEmpty()) {
+            throw new BadRequestException("Specialization name is required.");
+        }
+        if (specializationRepository.existsByNameIgnoreCase(specialization.getName().trim())) {
+            throw new BadRequestException("Specialization already exists with name: " + specialization.getName().trim());
+        }
+        specialization.setName(specialization.getName().trim());
+        if (specialization.getDescription() != null) {
+            specialization.setDescription(specialization.getDescription().trim());
         }
         return specializationRepository.save(specialization);
+    }
+
+    @Transactional
+    public void deleteSpecialization(Long id) {
+        Specialization spec = specializationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Specialization not found with ID: " + id));
+
+        // Referential integrity check: Check if any doctor is assigned this specialization
+        boolean assignedToDoctor = doctorRepository.findAll().stream()
+                .anyMatch(d -> d.getSpecialization() != null && d.getSpecialization().getId().equals(id));
+        if (assignedToDoctor) {
+            throw new BadRequestException("Cannot delete medical specialization '" + spec.getName() 
+                    + "' because it is currently assigned to one or more doctors. Please reassign doctors before deleting.");
+        }
+
+        // Referential integrity check: Check if any historical appointment exists under this specialization
+        boolean assignedToAppointment = appointmentRepository.findAll().stream()
+                .anyMatch(a -> a.getDoctor() != null && a.getDoctor().getSpecialization() != null 
+                        && a.getDoctor().getSpecialization().getId().equals(id));
+        if (assignedToAppointment) {
+            throw new BadRequestException("Cannot delete medical specialization '" + spec.getName() 
+                    + "' because historical appointments exist under this department.");
+        }
+
+        specializationRepository.delete(spec);
     }
 
     public List<AppointmentResponse> getAllAppointments() {

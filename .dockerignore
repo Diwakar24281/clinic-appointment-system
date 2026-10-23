@@ -1,0 +1,9 @@
+target/
+database_backup/
+scratch/
+.git
+.gitignore
+.env
+*.local.properties
+smtp-credentials.ps1
+*.log

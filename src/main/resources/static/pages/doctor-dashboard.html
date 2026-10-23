@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Dashboard - Clinic Appointment Booking System</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/emergency.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
 
@@ -21,13 +24,24 @@
         <div class="card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; margin-bottom: 2rem; padding: 2rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
                 <div>
-                    <span style="background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Doctor Consultation Suite</span>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                        <span style="background: rgba(255,255,255,0.15); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase;">Doctor Consultation Suite</span>
+                        <button type="button" id="enableAudioAlertBtn" onclick="toggleDoctorAudioAlerts()" class="btn btn-sm" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5; font-size: 0.8rem; font-weight: 700; padding: 0.3rem 0.75rem;">
+                            🔔 Enable Emergency Alert Sound
+                        </button>
+                        <button type="button" id="disableAudioAlertBtn" onclick="disableDoctorAudioAlerts()" style="display: none;" aria-hidden="true"></button>
+                    </div>
                     <h2 id="docGreeting" style="font-size: 1.8rem; margin-top: 0.5rem;">Today's Patient Queue</h2>
                     <p style="opacity: 0.8; font-size: 0.9rem; margin-top: 0.2rem;">Manage waiting patients and call tokens into consultation.</p>
                 </div>
                 <button type="button" id="callNextBtn" class="btn btn-success" onclick="callNextPatient()" style="font-size: 1.1rem; padding: 0.85rem 1.8rem; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                     📢 Call Next Patient
                 </button>
+            </div>
+
+            <!-- Browser Audio Policy Disclaimer -->
+            <div style="margin-top: 1.25rem; background: rgba(0,0,0,0.25); border-left: 3px solid #f59e0b; padding: 0.55rem 0.85rem; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;">
+                ℹ️ <strong>Emergency Alert Sound Notice:</strong> Browser policies require a user click to enable alert audio. Click <em>'Enable Emergency Alert Sound'</em> once after opening this page. Audio sirens repeat continuously when a new case is assigned until acknowledged or disabled. Your alert preference remains saved across portal navigation and refreshes while logged in.
             </div>
         </div>
 
@@ -55,6 +69,20 @@
                     <div class="stat-val" id="statWaitingCount">0</div>
                     <div class="stat-label">Total Patients Waiting</div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Emergency Dispatches Alert Section -->
+        <div class="card" id="doctorEmergencyCard" style="border-left: 5px solid #ef4444; margin-bottom: 2rem; display: none;">
+            <div class="card-header" style="border-bottom: 1px solid #fee2e2; padding-bottom: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="font-size: 1.3rem;">🚨</span>
+                    <h3 class="card-title" style="color: #dc2626; margin: 0;">Active Emergency Cases Assigned to You</h3>
+                </div>
+                <span class="status-pill ALERTING_HOSPITALS" id="doctorEmergencyCountBadge">0 Critical</span>
+            </div>
+            <div id="doctorEmergencyList" style="padding: 1rem 0;">
+                <!-- Loaded dynamically via doctor.js -->
             </div>
         </div>
 
@@ -88,6 +116,58 @@
         </div>
     </div>
 
+    <!-- Doctor Emergency Siren Alert Modal -->
+    <div id="doctorAlertModal" class="doctor-alert-modal" style="display: none;">
+        <div class="doctor-alert-box">
+            <div class="alert-siren-icon">🚨</div>
+            <h2 style="color: #dc2626; font-size: 1.6rem; margin: 0.5rem 0 0.2rem; font-weight: 800;">
+                CRITICAL EMERGENCY ALERT
+            </h2>
+            <p style="color: #64748b; font-size: 0.88rem; margin-bottom: 1.25rem;">
+                A hospital coordinator has dispatched you as the primary emergency physician for this case.
+            </p>
+
+            <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 12px; padding: 1.1rem; text-align: left; margin-bottom: 1.5rem; max-height: 380px; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span class="status-pill ALERTING_HOSPITALS" id="modalCategoryBadge">CHEST PAIN</span>
+                        <span class="status-pill" id="modalStatusBadge" style="background:#fee2e2; color:#b91c1c;">DOCTOR_ASSIGNED</span>
+                    </div>
+                    <strong style="color: #0f172a; font-size: 1.05rem;" id="modalEmergencyCaseId">#--</strong>
+                </div>
+
+                <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #dc2626; letter-spacing: 0.5px;">Reported Patient Symptoms</span>
+                    <h4 style="color: #1e293b; margin: 0.25rem 0 0; font-size: 0.95rem; line-height: 1.4;" id="modalPatientCondition">--</h4>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; font-size: 0.83rem; color: #475569;">
+                    <div>👤 <strong>Patient:</strong> <span id="modalPatientName" style="color: #0f172a;">--</span></div>
+                    <div>📞 <strong>Contact Phone:</strong> <span id="modalContactPhone" style="color: #0f172a; font-weight: 600;">--</span></div>
+                    <div>🏥 <strong>Hospital:</strong> <span id="modalHospitalName" style="color: #0f172a;">--</span></div>
+                    <div>⏱️ <strong>Time Received:</strong> <span id="modalTimeReceived" style="color: #0f172a;">--</span></div>
+                    <div>🚑 <strong>Ambulance Unit:</strong> <span id="modalAmbulanceNumber" style="color: #0f172a;">--</span></div>
+                    <div>⏳ <strong>Estimated Arrival:</strong> <span id="modalEstimatedEta" style="color: #0284c7; font-weight: 700;">--</span></div>
+                </div>
+
+                <div style="margin-top: 0.75rem; padding-top: 0.6rem; border-top: 1px dashed #fecaca; font-size: 0.82rem; color: #475569;">
+                    <div>📍 <strong>Reported Location:</strong> <span id="modalReportedAddress" style="color: #0f172a;">--</span></div>
+                    <div>🚩 <strong>Nearby Landmark:</strong> <span id="modalLandmark" style="color: #0f172a;">--</span></div>
+                    <div>🌐 <strong>GPS Fix:</strong> <span id="modalGpsCoords" style="color: #0f172a; font-family: monospace;">--</span></div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+                <a id="modalTrackLink" href="#" target="_blank" class="btn btn-secondary" style="flex: 1;">
+                    📍 Track Ambulance
+                </a>
+                <button type="button" id="modalAcknowledgeBtn" class="btn btn-success" style="flex: 1.5; font-weight: 800; background: #10b981;">
+                    🩺 Acknowledge & Prep Trauma Room
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>&copy; 2026 Clinic Appointment Booking System</p>
     </footer>
@@ -102,6 +182,7 @@
                 const dateInput = document.getElementById('filterDate');
                 dateInput.value = new Date().toISOString().split('T')[0];
                 loadDoctorQueue();
+                initDoctorEmergencyMonitoring();
             }
         });
     </script>

@@ -7,6 +7,7 @@ import com.example.clinic.entity.Appointment;
 import com.example.clinic.entity.AppointmentStatus;
 import com.example.clinic.entity.Doctor;
 import com.example.clinic.entity.Patient;
+import com.example.clinic.entity.Role;
 import com.example.clinic.exception.BadRequestException;
 import com.example.clinic.exception.ResourceNotFoundException;
 import com.example.clinic.exception.SlotAlreadyBookedException;
@@ -17,10 +18,17 @@ import com.example.clinic.repository.PrescriptionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.clinic.entity.DoctorAvailability;
+import com.example.clinic.repository.DoctorAvailabilityRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,65 +36,129 @@ public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
+    private final DoctorAvailabilityRepository availabilityRepository;
     private final PatientRepository patientRepository;
     private final PrescriptionRepository prescriptionRepository;
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm a");
+    public static final LocalTime LUNCH_START = LocalTime.of(13, 0); // 1:00 PM
+    public static final LocalTime LUNCH_END = LocalTime.of(14, 30);   // 2:30 PM
+    public static final int SLOT_DURATION_MINUTES = 30;
 
     public AppointmentService(AppointmentRepository appointmentRepository,
                               DoctorRepository doctorRepository,
+                              DoctorAvailabilityRepository availabilityRepository,
                               PatientRepository patientRepository,
                               PrescriptionRepository prescriptionRepository) {
         this.appointmentRepository = appointmentRepository;
         this.doctorRepository = doctorRepository;
+        this.availabilityRepository = availabilityRepository;
         this.patientRepository = patientRepository;
         this.prescriptionRepository = prescriptionRepository;
     }
 
     @Transactional
     public AppointmentResponse bookAppointment(AppointmentRequest request) {
-        // 1. Validate Doctor & Patient
+        // 1. Validate Doctor & Patient existence
         Doctor doctor = doctorRepository.findById(request.getDoctorId())
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + request.getDoctorId()));
 
+        if ("PENDING_APPROVAL".equalsIgnoreCase(doctor.getApprovalStatus()) || "INACTIVE".equalsIgnoreCase(doctor.getApprovalStatus())) {
+            throw new BadRequestException("Doctor is not currently activated for appointments.");
+        }
+
         if (!doctor.isAvailable()) {
-            throw new BadRequestException("Doctor is currently not available for bookings.");
+            throw new BadRequestException("Doctor is currently on leave / unavailable for bookings.");
         }
 
         Patient patient = patientRepository.findById(request.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + request.getPatientId()));
 
-        // 2. Prevent booking in the past
-        if (request.getAppointmentDate().isBefore(LocalDate.now())) {
-            throw new BadRequestException("Cannot book appointment for a past date.");
+        if (patient.getUser() != null && patient.getUser().getRole() != Role.PATIENT) {
+            throw new BadRequestException("Access Denied: Only registered Patient accounts can book appointments.");
         }
 
-        // 3. STRICT DOUBLE-BOOKING CHECK
+        LocalDate appointmentDate = request.getAppointmentDate();
+        LocalTime appointmentTime = request.getAppointmentTime();
+
+        // 2. Prevent booking in the past
+        LocalDate today = LocalDate.now();
+        if (appointmentDate.isBefore(today)) {
+            throw new BadRequestException("Cannot book an appointment for a past date.");
+        }
+        if (appointmentDate.isEqual(today) && appointmentTime.isBefore(LocalTime.now())) {
+            throw new BadRequestException("Cannot book an appointment slot that has already passed.");
+        }
+
+        // 3. Validate 30-minute slot alignment
+        if (appointmentTime.getMinute() != 0 && appointmentTime.getMinute() != 30) {
+            throw new BadRequestException("Appointments must be scheduled on the hour or half-hour (e.g. 09:00, 09:30).");
+        }
+        if (appointmentTime.getSecond() != 0 || appointmentTime.getNano() != 0) {
+            appointmentTime = LocalTime.of(appointmentTime.getHour(), appointmentTime.getMinute());
+        }
+
+        // 4. Validate against Doctor's Schedule on that Day
+        DayOfWeek dayOfWeek = appointmentDate.getDayOfWeek();
+        Optional<DoctorAvailability> optAvailability = availabilityRepository.findByDoctorIdAndDayOfWeek(doctor.getId(), dayOfWeek);
+
+        if (optAvailability.isEmpty()) {
+            throw new BadRequestException("Doctor is not scheduled for consultations on " + dayOfWeek.name() + ".");
+        }
+
+        DoctorAvailability availability = optAvailability.get();
+        LocalTime docStart = availability.getStartTime();
+        LocalTime docEnd = availability.getEndTime();
+        LocalTime slotEnd = appointmentTime.plusMinutes(SLOT_DURATION_MINUTES);
+
+        // Check if slot falls outside working hours
+        if (appointmentTime.isBefore(docStart)) {
+            throw new BadRequestException("Requested time (" + appointmentTime.format(TIME_FORMATTER) 
+                    + ") is before doctor's consultation start time (" + docStart.format(TIME_FORMATTER) + ").");
+        }
+        if (appointmentTime.isAfter(docEnd) || slotEnd.isAfter(docEnd)) {
+            throw new BadRequestException("Requested appointment ends at " + slotEnd.format(TIME_FORMATTER) 
+                    + ", which extends past doctor's scheduled closing time (" + docEnd.format(TIME_FORMATTER) + ").");
+        }
+
+        // 5. Check Lunch Break (1:00 PM to 2:30 PM)
+        boolean startsInLunch = !appointmentTime.isBefore(LUNCH_START) && appointmentTime.isBefore(LUNCH_END);
+        boolean overlapsLunch = appointmentTime.isBefore(LUNCH_START) && slotEnd.isAfter(LUNCH_START);
+        if (startsInLunch || overlapsLunch) {
+            throw new BadRequestException("Appointments cannot be booked during the clinic lunch break (01:00 PM - 02:30 PM).");
+        }
+
+        // 6. STRICT DOUBLE-BOOKING CHECK
         boolean isAlreadyBooked = appointmentRepository.existsByDoctorIdAndAppointmentDateAndAppointmentTimeAndStatusIn(
                 doctor.getId(),
-                request.getAppointmentDate(),
-                request.getAppointmentTime(),
+                appointmentDate,
+                appointmentTime,
                 Arrays.asList(AppointmentStatus.BOOKED, AppointmentStatus.IN_CONSULTATION)
         );
 
         if (isAlreadyBooked) {
-            throw new SlotAlreadyBookedException("Selected appointment slot is already booked. Please choose another time.");
+            throw new SlotAlreadyBookedException("Selected appointment slot (" + appointmentTime.format(TIME_FORMATTER) + ") is already booked. Please choose another time.");
         }
 
-        // 4. GENERATE SEQUENTIAL TOKEN NUMBER (Isolated per doctor and date)
-        int existingCount = appointmentRepository.countByDoctorIdAndAppointmentDate(doctor.getId(), request.getAppointmentDate());
+        // 7. GENERATE SEQUENTIAL TOKEN NUMBER (Isolated per doctor and date)
+        int existingCount = appointmentRepository.countByDoctorIdAndAppointmentDate(doctor.getId(), appointmentDate);
         int tokenNumber = existingCount + 1;
 
-        // 5. Create and save Appointment
+        // 8. Create and save Appointment with concurrency safety
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        appointment.setAppointmentDate(request.getAppointmentDate());
-        appointment.setAppointmentTime(request.getAppointmentTime());
+        appointment.setAppointmentDate(appointmentDate);
+        appointment.setAppointmentTime(appointmentTime);
         appointment.setTokenNumber(tokenNumber);
         appointment.setStatus(AppointmentStatus.BOOKED);
 
-        Appointment saved = appointmentRepository.save(appointment);
+        Appointment saved;
+        try {
+            saved = appointmentRepository.saveAndFlush(appointment);
+        } catch (DataIntegrityViolationException e) {
+            throw new SlotAlreadyBookedException("Concurrency conflict: The selected slot was just booked by another patient. Please choose another slot.");
+        }
 
         return mapToResponse(saved);
     }

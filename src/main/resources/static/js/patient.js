@@ -43,26 +43,79 @@ async function loadDoctors() {
             return;
         }
 
+        const currentUser = getCurrentUser();
+        const role = currentUser ? currentUser.role : 'PATIENT'; // default to patient view for public visitors
+
         let html = '<div class="stats-grid">';
         doctors.forEach(doc => {
+            // Status styling helper
+            let statusBadge = '';
+            const status = doc.todayAvailabilityStatus || 'Available today';
+            if (status === 'Available today') {
+                statusBadge = '<span class="badge" style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0;">🟢 Available Today</span>';
+            } else if (status === 'Fully booked') {
+                statusBadge = '<span class="badge" style="background:#fef3c7; color:#d97706; border:1px solid #fde68a;">🟡 Fully Booked Today</span>';
+            } else if (status === 'On leave') {
+                statusBadge = '<span class="badge" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;">🔴 On Leave</span>';
+            } else if (status === 'Not scheduled today') {
+                statusBadge = '<span class="badge" style="background:#f1f5f9; color:#475569; border:1px solid #cbd5e1;">⚪ Not Scheduled Today</span>';
+            } else {
+                statusBadge = '<span class="badge" style="background:#f8fafc; color:#64748b; border:1px solid #e2e8f0;">⚙️ Schedule Not Configured</span>';
+            }
+
             html += `
-            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-radius: 12px; box-shadow: var(--shadow-sm);">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
-                        <div style="background: var(--primary-light); color: var(--primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👨‍⚕️</div>
-                        <div>
-                            <h3 style="font-size: 1.1rem; color: var(--secondary);">${doc.name}</h3>
-                            <span class="badge" style="background: var(--primary-light); color: var(--primary);">${doc.specializationName}</span>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+                        <div style="display: flex; align-items: center; gap: 0.8rem;">
+                            <div style="background: var(--primary-light); color: var(--primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">👨‍⚕️</div>
+                            <div>
+                                <h3 style="font-size: 1.1rem; color: var(--secondary); margin-bottom: 0.15rem;">${doc.name}</h3>
+                                <span class="badge" style="background: var(--primary-light); color: var(--primary);">${doc.specializationName}</span>
+                            </div>
                         </div>
                     </div>
-                    <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
-                        <p><strong>Fee:</strong> ₹${doc.consultationFee.toFixed(2)}</p>
-                        <p><strong>Email:</strong> ${doc.email}</p>
+
+                    <div style="margin-bottom: 0.8rem;">
+                        ${statusBadge}
+                    </div>
+
+                    <div style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.35rem; background: #f8fafc; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <div><strong>Consultation Fee:</strong> <span style="color: var(--secondary); font-weight: 700;">₹${doc.consultationFee.toFixed(2)}</span></div>
+                        <div><strong>Today's Hours:</strong> <span style="color: #0f172a;">${doc.todayWorkingHours || '09:00 AM - 10:00 PM'}</span></div>
+                        ${role === 'ADMIN' ? `
+                            <div><strong>Email:</strong> ${doc.email}</div>
+                            <div><strong>Activation Status:</strong> <span class="badge" style="background:#ecfdf5; color:#059669; font-weight:700;">${doc.approvalStatus || 'APPROVED'}</span></div>
+                        ` : ''}
+                        ${role === 'DOCTOR' ? `
+                            <div><strong>Schedule Info:</strong> <span style="color:#0f172a;">Mon-Sat (Standard clinic hours)</span></div>
+                        ` : ''}
+                        ${role === 'PATIENT' ? `<div><strong>Available Schedule:</strong> <span style="color: var(--primary); font-weight: 600;">${doc.availableDatesAndTimes || 'Check booking calendar'}</span></div>` : ''}
                     </div>
                 </div>
-                <a href="/pages/book-appointment.html?doctorId=${doc.id}" class="btn btn-primary" style="width: 100%;">
-                    Book Appointment
-                </a>
+
+
+                <div>
+                    ${role === 'PATIENT' ? `
+                        ${doc.todayAvailabilityStatus === 'On leave' ? `
+                            <button class="btn btn-secondary" disabled style="width: 100%; opacity: 0.6; cursor: not-allowed;">
+                                Doctor Currently On Leave
+                            </button>
+                        ` : `
+                            <a href="/pages/book-appointment.html?doctorId=${doc.id}" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">
+                                📅 Book Appointment
+                            </a>
+                        `}
+                    ` : role === 'DOCTOR' ? `
+                        <div style="text-align: center; font-size: 0.82rem; color: var(--text-muted); padding: 0.5rem; background: #f1f5f9; border-radius: 6px; font-weight: 600;">
+                            🩺 Read-Only Colleague Profile
+                        </div>
+                    ` : `
+                        <a href="/pages/manage-doctors.html" class="btn btn-outline" style="width: 100%; text-align: center; display: block; font-size: 0.85rem;">
+                            ⚙️ Manage in Admin Portal
+                        </a>
+                    `}
+                </div>
             </div>`;
         });
         html += '</div>';
@@ -207,6 +260,8 @@ async function loadPatientAppointments() {
     const container = document.getElementById('patientAppointmentsTable');
     if (!container) return;
 
+    checkActiveEmergencyForPatient();
+
     try {
         const list = await apiRequest(`/appointments/patient/${user.profileId}`);
         if (list.length === 0) {
@@ -259,5 +314,30 @@ async function cancelAppointment(aptId) {
         await loadPatientAppointments();
     } catch (error) {
         showAlert(error.message || 'Failed to cancel appointment.', 'error');
+    }
+}
+
+// Check for active emergency in progress for patient
+async function checkActiveEmergencyForPatient() {
+    const user = getCurrentUser();
+    if (!user) return;
+    const banner = document.getElementById('patientActiveEmergencyBanner');
+    if (!banner) return;
+
+    try {
+        const active = await apiRequest(`/emergencies/active/user/${user.id}`);
+        if (active && active.id) {
+            banner.style.display = 'block';
+            const pill = document.getElementById('patientActiveStatusPill');
+            pill.className = `status-pill ${active.status}`;
+            pill.textContent = (active.status || 'ACTIVE').replace('_', ' ');
+            document.getElementById('patientActiveEmergencyTitle').textContent = 
+                `Emergency Case #${active.id}: ${active.assignedHospitalName ? 'Accepted by ' + active.assignedHospitalName : 'Alerting Hospitals'}`;
+            document.getElementById('patientActiveTrackBtn').href = `/pages/emergency-tracking.html?id=${active.id}`;
+        } else {
+            banner.style.display = 'none';
+        }
+    } catch (e) {
+        banner.style.display = 'none';
     }
 }

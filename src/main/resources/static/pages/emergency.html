@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response & Ambulance Dispatch - Clinic Care</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/emergency.css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/pages/index.html" class="brand">
+            <div class="brand-icon">🏥</div>
+            Clinic Appointment Booking System
+        </a>
+        <ul class="nav-links" id="navLinks"></ul>
+    </nav>
+
+    <!-- Emergency Hero Section -->
+    <div class="emergency-hero">
+        <h1>🚨 Emergency Medical Response</h1>
+        <p>Immediate ambulance dispatch, hospital triage coordination, and emergency physician alerts.</p>
+
+        <div class="sos-button-wrapper">
+            <button class="sos-circle-btn" id="oneTapSosBtn" title="Press to trigger instant emergency alert">
+                <span class="sos-text">SOS</span>
+                <span class="sos-subtext">Tap for Help</span>
+            </button>
+            <p style="margin-top: 0.75rem; font-size: 0.85rem; color: #fca5a5; font-weight: 500;">
+                Press SOS for instant default alert or use voice/form details below
+            </p>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 850px; margin-top: -1.5rem; position: relative; z-index: 10;">
+
+        <!-- 112 India Emergency Fallback Banner -->
+        <div style="background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 12px; padding: 0.85rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+                <strong style="color: #b91c1c; font-size: 0.95rem;">🚨 Life-Threatening Emergency?</strong>
+                <p style="color: #7f1d1d; font-size: 0.85rem; margin: 0.2rem 0 0;">
+                    In India, dial <strong>112</strong> (National Emergency Helpline) or <strong>108</strong> (Ambulance) for immediate response.
+                </p>
+            </div>
+            <a href="tel:112" class="btn btn-sm" style="background: #dc2626; color: white; font-weight: 700; padding: 0.45rem 1rem; border-radius: 8px; text-decoration: none;">
+                📞 Call 112 Directly
+            </a>
+        </div>
+
+        <!-- Doctor Role Switcher Banner (Hidden for Patients) -->
+        <div id="doctorRoleNotice" style="display: none; background: #e0f2fe; border: 1.5px solid #bae6fd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: left;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+                <div>
+                    <strong style="color: #0369a1;">👨‍⚕️ Logged in as Doctor</strong>
+                    <p style="color: #0c4a6e; font-size: 0.85rem; margin: 0.2rem 0 0;">
+                        Doctors monitor and respond to assigned emergencies from the Doctor Dashboard rather than submitting emergency forms.
+                    </p>
+                </div>
+                <a href="/pages/doctor-dashboard.html#doctorEmergencyCard" class="btn btn-primary btn-sm" style="font-weight: 700;">
+                    Go to Doctor Emergency Suite ➡️
+                </a>
+            </div>
+        </div>
+
+        <!-- Voice Assistant Section -->
+        <div class="voice-assistant-card">
+            <div class="voice-card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="font-size: 1.4rem;">🎙️</span>
+                    <div>
+                        <h3 style="color: #0f172a; margin: 0; font-size: 1.15rem;">Emergency Voice Assistant</h3>
+                        <p style="color: #64748b; font-size: 0.82rem; margin: 0;">Speak your emergency symptoms clearly</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <!-- Language Selection: en-IN / ta-IN -->
+                    <label for="voiceLangSelect" style="font-size: 0.82rem; font-weight: 600; color: #475569;">Language:</label>
+                    <select id="voiceLangSelect" class="form-control" style="width: auto; padding: 0.35rem 0.65rem; font-size: 0.85rem; font-weight: 600; border-radius: 8px;">
+                        <option value="en-IN" selected>English (India) - en-IN</option>
+                        <option value="ta-IN">Tamil (தமிழ்) - ta-IN</option>
+                    </select>
+
+                    <span class="voice-badge" id="voiceStatusBadge">
+                        <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+                        Voice Ready
+                    </span>
+                </div>
+            </div>
+
+            <!-- Voice Controls: Start & Stop buttons -->
+            <div style="margin: 1rem 0; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary" id="startVoiceBtn" style="padding: 0.6rem 1.2rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+                    🎙️ Start Speaking
+                </button>
+                <button type="button" class="btn btn-secondary" id="stopVoiceBtn" disabled style="padding: 0.6rem 1.2rem; font-weight: 700; display: inline-flex; align-items: center; gap: 0.4rem;">
+                    ⏹️ Stop Microphone
+                </button>
+                <button type="button" class="btn btn-outline" id="playSpokenGuideBtn" title="Play audible spoken instructions" style="padding: 0.6rem 1rem; font-size: 0.85rem;">
+                    🔊 Play Voice Guide
+                </button>
+            </div>
+
+            <div class="voice-mic-container">
+                <button type="button" class="voice-mic-btn" id="micBtn" title="Click to start / stop speaking">
+                    🎤
+                </button>
+                <div class="voice-status-text">
+                    <div class="voice-transcript" id="voiceTranscript">
+                        Click <strong>Start Speaking</strong> and state symptoms: e.g. <em>"Severe chest pain and difficulty breathing"</em> (or in தமிழ்: <em>"நெஞ்சு வலி மற்றும் மூச்சுத் திணறல்"</em>)
+                    </div>
+                    <div class="voice-instructions" id="micHelpText">
+                        Spoken transcription will be appended to the symptoms description below without erasing typed text.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Category Selection Chips -->
+            <div style="margin-top: 1.25rem;">
+                <label style="font-size: 0.85rem; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.05em;">
+                    Or Select Emergency Category:
+                </label>
+                <div class="category-chips" id="categoryChips">
+                    <button type="button" class="category-chip" data-category="CHEST_PAIN">💔 Chest Pain / Cardiac</button>
+                    <button type="button" class="category-chip" data-category="TRAUMA_ACCIDENT">🚑 Severe Accident / Trauma</button>
+                    <button type="button" class="category-chip" data-category="BREATHING_DIFFICULTY">🫁 Breathing Difficulty</button>
+                    <button type="button" class="category-chip" data-category="STROKE_UNCONSCIOUS">🧠 Stroke / Unconscious</button>
+                    <button type="button" class="category-chip" data-category="PREGNANCY_LABOR">🤰 Pregnancy / Labor</button>
+                    <button type="button" class="category-chip" data-category="OTHER">⚠️ Other Critical Emergency</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Details & Location Form -->
+        <div class="card"
+            style="box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08); border-radius: 16px; margin-bottom: 3rem;">
+            <div class="card-header"
+                style="border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                <h3 style="color: #0f172a; display: flex; align-items: center; gap: 0.5rem; font-size: 1.2rem;">
+                    📍 Emergency Location & Contact
+                </h3>
+                <p style="color: #64748b; font-size: 0.85rem; margin-top: 0.2rem;">
+                    Ambulances and emergency response teams are dispatched to this coordinate.
+                </p>
+            </div>
+
+            <!-- GPS Auto-detection Banner -->
+            <div class="gps-status-card" id="gpsStatusCard">
+                <div class="gps-info">
+                    <div class="gps-icon" id="gpsIcon">📡</div>
+                    <div>
+                        <h4 id="gpsStatusTitle" style="color: #0f172a; margin: 0; font-size: 0.98rem;">Detecting GPS
+                            Location...</h4>
+                        <p id="gpsCoordsText" style="color: #64748b; font-size: 0.82rem; margin: 0.15rem 0 0;">
+                            Acquiring high-accuracy satellite coordinates...
+                        </p>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline" id="refreshGpsBtn" style="font-size: 0.8rem;">
+                    🔄 Refresh GPS
+                </button>
+            </div>
+
+            <form id="emergencyForm">
+                <input type="hidden" id="emergencyCategory" value="OTHER">
+                <input type="hidden" id="latitude">
+                <input type="hidden" id="longitude">
+                <input type="hidden" id="locationAccuracy">
+
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label for="emergencyDescription"
+                        style="font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+                        Symptoms & Situation Description <span style="color: #ef4444;">*</span>
+                    </label>
+                    <textarea id="emergencyDescription" class="form-control" rows="3" required
+                        placeholder="Describe symptoms, patient condition, number of persons injured, or speech recognition input..."
+                        style="width: 100%; border-radius: 10px; border: 1.5px solid #cbd5e1; padding: 0.75rem; font-size: 0.95rem;"></textarea>
+                </div>
+
+                <div class="form-grid"
+                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div class="form-group">
+                        <label for="callbackPhone"
+                            style="font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+                            Callback Contact Phone <span style="color: #ef4444;">*</span>
+                        </label>
+                        <input type="tel" id="callbackPhone" class="form-control" required placeholder="e.g. 9876543210"
+                            style="width: 100%; border-radius: 10px; border: 1.5px solid #cbd5e1; padding: 0.75rem; font-size: 0.95rem;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyArea"
+                            style="font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+                            Area / Locality
+                        </label>
+                        <input type="text" id="emergencyArea" class="form-control"
+                            placeholder="e.g. Richmond Town, Indiranagar"
+                            style="width: 100%; border-radius: 10px; border: 1.5px solid #cbd5e1; padding: 0.75rem; font-size: 0.95rem;">
+                    </div>
+                </div>
+
+                <div class="form-grid"
+                    style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="form-group">
+                        <label for="manualAddress"
+                            style="font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+                            Street Address / Building
+                        </label>
+                        <input type="text" id="manualAddress" class="form-control"
+                            placeholder="e.g. Flat 302, Green Glen Apartments, 12th Main"
+                            style="width: 100%; border-radius: 10px; border: 1.5px solid #cbd5e1; padding: 0.75rem; font-size: 0.95rem;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="landmark"
+                            style="font-weight: 600; color: #1e293b; display: block; margin-bottom: 0.4rem;">
+                            Nearby Landmark
+                        </label>
+                        <input type="text" id="landmark" class="form-control" placeholder="e.g. Near Metro Pillar 140"
+                            style="width: 100%; border-radius: 10px; border: 1.5px solid #cbd5e1; padding: 0.75rem; font-size: 0.95rem;">
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitEmergencyBtn" class="btn"
+                    style="width: 100%; padding: 1.1rem; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%); color: white; font-weight: 800; font-size: 1.15rem; border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); display: flex; align-items: center; justify-content: center; gap: 0.6rem;">
+                    🚨 Dispatch Emergency Ambulance & Alert Hospitals Now
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Clinic Appointment Booking System & Emergency Response Network. 24/7 Helpline: 108 / 112</p>
+    </footer>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/emergency.js"></script>
+</body>
+
+</html>

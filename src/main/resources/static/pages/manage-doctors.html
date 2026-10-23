@@ -32,10 +32,10 @@
                         <tr>
                             <th>Doctor Name</th>
                             <th>Specialization</th>
-                            <th>Email</th>
+                            <th>Contact (Phone & Email)</th>
                             <th>Consultation Fee</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>Activation Status</th>
+                            <th style="text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="adminDoctorsTable">
@@ -43,6 +43,95 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Review & Edit Doctor Modal (Phase 4) -->
+    <div id="editDoctorModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 580px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.2rem;">
+                <div>
+                    <h3 class="card-title" style="margin-bottom: 0.2rem;" id="editDoctorModalTitle">Review & Activate Doctor</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Assign department specialization, consultation fee, and consultation schedule.</p>
+                </div>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="closeEditDoctorModal()">✕</button>
+            </div>
+
+            <form id="editDoctorForm" onsubmit="handleUpdateDoctor(event)">
+                <input type="hidden" id="editDoctorId">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Doctor Name</label>
+                        <input type="text" id="editDocName" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Mobile Number</label>
+                        <input type="text" id="editDocPhone" class="form-control" placeholder="10-digit number">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Registered Email</label>
+                    <input type="email" id="editDocEmail" class="form-control" readonly style="background:#f1f5f9; cursor:not-allowed;">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Medical Specialization *</label>
+                        <select id="editDocSpecSelect" class="form-control" required>
+                            <!-- Dynamically loaded -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Consultation Fee (₹) *</label>
+                        <input type="number" id="editDocFee" class="form-control" placeholder="500.00" min="0" step="50" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Account Activation Status *</label>
+                    <select id="editDocStatusSelect" class="form-control" required>
+                        <option value="APPROVED">🟢 APPROVED (Active & Bookable)</option>
+                        <option value="PENDING_APPROVAL">🟡 PENDING APPROVAL (Awaiting Credential Review)</option>
+                        <option value="INACTIVE">🔴 INACTIVE / SUSPENDED (Cannot Login or Consult)</option>
+                    </select>
+                </div>
+
+                <!-- Schedule Configuration -->
+                <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem;">
+                    <label class="form-label" style="margin-bottom: 0.5rem; font-weight: 700;">Consultation Days & Window</label>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem;">
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="dayMon" value="MONDAY" checked> Mon</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="dayTue" value="TUESDAY" checked> Tue</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="dayWed" value="WEDNESDAY" checked> Wed</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="dayThu" value="THURSDAY" checked> Thu</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="dayFri" value="FRIDAY" checked> Fri</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="daySat" value="SATURDAY" checked> Sat</label>
+                        <label style="font-size: 0.85rem; font-weight: 600;"><input type="checkbox" id="daySun" value="SUNDAY"> Sun</label>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="flex: 1;">
+                            <label style="font-size: 0.8rem; color: var(--text-muted);">Start Time:</label>
+                            <input type="time" id="editDocStartTime" class="form-control" value="09:00" required>
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="font-size: 0.8rem; color: var(--text-muted);">End Time (up to 10:00 PM):</label>
+                            <input type="time" id="editDocEndTime" class="form-control" value="22:00" required>
+                        </div>
+                    </div>
+                    <small style="display: block; margin-top: 0.5rem; color: #0284c7; font-size: 0.8rem;">
+                        ℹ️ <strong>Lunch Break Policy:</strong> 01:00 PM to 02:30 PM is automatically protected and reserved by the system.
+                    </small>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.8rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditDoctorModal()">Cancel</button>
+                    <button type="submit" id="saveDoctorBtn" class="btn btn-primary">Save & Confirm Activation</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -87,7 +176,7 @@
                 </div>
 
                 <div style="background: #f8fafc; border: 1px dashed var(--border); padding: 0.8rem; border-radius: 6px; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.2rem;">
-                    ℹ️ <strong>Note:</strong> Default schedule (Mon – Sat, 09:00 AM – 01:00 PM) will be automatically assigned.
+                    ℹ️ <strong>Note:</strong> Standard schedule (Mon – Sat, 09:00 AM – 10:00 PM, Lunch Break: 01:00 PM – 02:30 PM) will be assigned.
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 0.8rem;">
@@ -112,11 +201,15 @@
         function closeAddDoctorModal() {
             document.getElementById('addDoctorModal').classList.remove('active');
         }
+        function closeEditDoctorModal() {
+            document.getElementById('editDoctorModal').classList.remove('active');
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             if (checkAuthGuard(['ADMIN'])) {
                 await loadAdminSpecializations();
                 await loadSpecializations('docSpecSelect');
+                await loadSpecializations('editDocSpecSelect');
                 await loadAdminDoctors();
             }
         });

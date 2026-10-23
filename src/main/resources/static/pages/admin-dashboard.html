@@ -59,6 +59,41 @@
             </div>
         </div>
 
+        <!-- Doctor Overview Section (Phase 7) -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem;">
+                <div>
+                    <h3 class="card-title" style="margin-bottom: 0.2rem;">👨‍⚕️ Doctor Overview</h3>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">Live clinic staff roster, credentialing activation status, and today's consultation hours.</p>
+                </div>
+                <div style="display: flex; gap: 0.6rem;">
+                    <button class="btn btn-sm btn-outline" onclick="loadDoctorOverview()">🔄 Refresh</button>
+                    <a href="/pages/manage-doctors.html" class="btn btn-sm btn-primary">Manage Doctors &rarr;</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Doctor Name & Contact</th>
+                            <th>Medical Specialization</th>
+                            <th>Consultation Fee</th>
+                            <th>Activation Status</th>
+                            <th>Today's Availability</th>
+                            <th>Consultation Hours</th>
+                            <th style="text-align: center;">Quick Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminDoctorOverviewTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading doctor overview...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <!-- Admin Quick Actions Grid -->
         <h3 style="font-size: 1.25rem; color: var(--secondary); margin-bottom: 1rem;">Management Modules</h3>
         <div class="stats-grid">
@@ -101,6 +136,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (checkAuthGuard(['ADMIN'])) {
                 loadAdminStats();
+                loadDoctorOverview();
             }
         });
     </script>

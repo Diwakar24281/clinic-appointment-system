@@ -91,9 +91,33 @@ function renderNavbar() {
     const navContainer = document.getElementById('navLinks');
     if (!navContainer) return;
 
+    let emergencyLink = '<li><a href="/pages/emergency.html" class="nav-sos-btn">🚨 Emergency SOS</a></li>';
+    if (user) {
+        if (user.role === 'DOCTOR') {
+            emergencyLink = '<li><a href="/pages/doctor-dashboard.html#doctorEmergencyCard" class="nav-sos-btn">🚨 Emergency Cases</a></li>';
+        } else if (user.role === 'ADMIN') {
+            emergencyLink = ''; // Phase 7: Remove Emergency SOS action from Admin portal
+        } else if (user.role === 'HOSPITAL') {
+            emergencyLink = '<li><a href="/pages/hospital-dashboard.html" class="nav-sos-btn">🚨 Hospital Dispatch</a></li>';
+        }
+    }
+
+    // Phase 7: If on home page and logged in as ADMIN, replace Book Appointment & Emergency SOS with Admin actions
+    if (user && user.role === 'ADMIN') {
+        const heroBtnGroup = document.getElementById('heroActionGroup') || document.querySelector('.card[style*="linear-gradient"] div[style*="flex"]');
+        if (heroBtnGroup && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname === '')) {
+            heroBtnGroup.innerHTML = `
+                <a href="/pages/admin-dashboard.html" class="btn" style="background: white; color: #0284c7; font-weight: 700; padding: 0.8rem 1.6rem;">Central Admin Console</a>
+                <a href="/pages/manage-doctors.html" class="btn" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); padding: 0.8rem 1.6rem;">Doctor Management &amp; Approvals</a>
+            `;
+        }
+    }
+
+
     let linksHtml = `<li><a href="/pages/index.html">Home</a></li>
                      <li><a href="/pages/doctors.html">Doctors</a></li>
-                     <li><a href="/pages/waiting-room.html">Waiting Room</a></li>`;
+                     <li><a href="/pages/waiting-room.html">Waiting Room</a></li>
+                     ${emergencyLink}`;
 
     if (!user) {
         linksHtml += `<li><a href="/pages/login.html" class="btn btn-sm btn-outline">Login</a></li>
@@ -106,6 +130,8 @@ function renderNavbar() {
             linksHtml += `<li><a href="/pages/doctor-dashboard.html">Doctor Dashboard</a></li>`;
         } else if (user.role === 'ADMIN') {
             linksHtml += `<li><a href="/pages/admin-dashboard.html">Admin Dashboard</a></li>`;
+        } else if (user.role === 'HOSPITAL') {
+            linksHtml += `<li><a href="/pages/hospital-dashboard.html">Dispatch Console</a></li>`;
         }
 
         linksHtml += `<li>
@@ -118,6 +144,10 @@ function renderNavbar() {
 }
 
 function logoutUser() {
+    if (typeof stopRepeatingSiren === 'function') {
+        stopRepeatingSiren();
+    }
+    sessionStorage.clear();
     clearCurrentUser();
     showAlert('Logged out successfully.', 'info');
     setTimeout(() => {

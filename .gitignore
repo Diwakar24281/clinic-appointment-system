@@ -51,3 +51,9 @@ Thumbs.db
 
 # Temporary / Scratch
 scratch/
+database_backup/
+
+# Local Environment and Secrets
+.env
+*.local.properties
+smtp-credentials.ps1

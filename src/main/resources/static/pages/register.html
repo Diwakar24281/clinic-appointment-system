@@ -3,8 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Registration - Clinic Appointment Booking System</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Create Account - Clinic Appointment Booking System</title>
+    <link rel="stylesheet" href="/css/style.css?v=2">
+    <style>
+        /* Role Selection Toggle */
+        .role-selector-group {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: 10px;
+            padding: 4px;
+            gap: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            background: transparent;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .role-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+            font-weight: 700;
+        }
+
+        .live-email-status {
+            font-size: 0.8rem;
+            margin-top: 0.35rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .status-neutral { color: var(--text-muted); }
+        .status-valid { color: #10b981; }
+        .status-invalid { color: #ef4444; }
+
+        /* Email OTP Verification Card */
+        .otp-verification-card {
+            background: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 1.1rem;
+            margin-bottom: 1.3rem;
+            transition: all 0.25s ease;
+        }
+
+        .otp-verification-card.verified {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .email-input-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-send-otp {
+            white-space: nowrap;
+            padding: 0.65rem 1rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #ffffff;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-send-otp:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
+        .btn-send-otp:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .otp-input-field {
+            font-size: 1.35rem;
+            letter-spacing: 6px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--secondary);
+            padding: 0.6rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            width: 150px;
+            transition: var(--transition);
+        }
+
+        .otp-input-field:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #86efac;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,75 +140,411 @@
         <ul class="nav-links" id="navLinks"></ul>
     </nav>
 
-    <div class="container" style="max-width: 580px; margin-top: 2.5rem;">
+    <div class="container" style="max-width: 580px; margin-top: 2.5rem; margin-bottom: 3rem;">
         <div class="card" style="padding: 2.2rem;">
+            
             <div style="text-align: center; margin-bottom: 1.8rem;">
-                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
-                <h2 class="card-title" style="font-size: 1.5rem;">Create Patient Account</h2>
-                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.3rem;">Register to book appointments & manage prescriptions</p>
+                <div style="font-size: 2.5rem; margin-bottom: 0.5rem;" id="regIcon">🏥</div>
+                <h2 class="card-title" style="font-size: 1.5rem;" id="regTitle">Create Patient Account</h2>
+                <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 0.3rem;" id="regSubtitle">
+                    Register to book appointments & manage health records
+                </p>
             </div>
 
-            <form id="registerForm" onsubmit="handleRegister(event)">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="regName">Full Name *</label>
-                        <input type="text" id="regName" class="form-control" placeholder="e.g. Rohan Sharma" required>
+            <!-- Role Selector: Patient and Doctor -->
+            <div class="role-selector-group">
+                <button type="button" class="role-btn active" id="roleBtnPatient" onclick="setRegisterRole('PATIENT')">
+                    <span>👤</span> Patient
+                </button>
+                <button type="button" class="role-btn" id="roleBtnDoctor" onclick="setRegisterRole('DOCTOR')">
+                    <span>👨‍⚕️</span> Doctor
+                </button>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="registerForm" onsubmit="handleRegistrationSubmit(event)">
+                
+                <div class="form-group">
+                    <label class="form-label" for="regName" id="lblFullName">Full Name *</label>
+                    <input type="text" id="regName" class="form-control" placeholder="e.g. Rohan Sharma" required>
+                </div>
+
+                <!-- Email Address & Email OTP Verification Component -->
+                <div class="otp-verification-card" id="emailOtpCard">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                        <label class="form-label" for="regEmail" style="margin-bottom: 0; font-weight: 700;">Email Address (Login ID &amp; Verification) *</label>
+                        <span id="emailVerifiedBadge" style="display: none;" class="verified-badge">✓ Email Verified</span>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="regEmail">Email Address *</label>
-                        <input type="email" id="regEmail" class="form-control" placeholder="rohan@example.com" required>
+                    <div class="email-input-row">
+                        <input type="email" id="regEmail" class="form-control" placeholder="name@example.com" required oninput="handleEmailInput(this.value)">
+                        <button type="button" id="btnSendEmailOtp" class="btn-send-otp" onclick="handleSendEmailOtp()">
+                            Send OTP to Email
+                        </button>
+                    </div>
+
+                    <div id="emailFeedback" class="live-email-status status-neutral">
+                        ℹ️ Enter your valid email address to receive your 6-digit verification code.
+                    </div>
+
+                    <!-- Inline Diagnostic Error Notice if Gmail SMTP is unconfigured -->
+                    <div id="smtpErrorNotice" style="display: none; margin-top: 0.85rem; padding: 0.75rem 0.9rem; border-radius: 8px; background-color: #fef2f2; border: 1px solid #fecaca; color: #991b1b; font-size: 0.84rem; line-height: 1.45;"></div>
+
+                    <!-- Email OTP Input and Verification Row (Revealed after Send OTP is clicked) -->
+                    <div id="otpInputSection" style="display: none; margin-top: 1rem; padding-top: 0.85rem; border-top: 1px dashed #cbd5e1;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.6rem;">
+                            📧 Enter the 6-digit OTP code sent via Gmail SMTP to your email inbox:
+                        </div>
+                        <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+                            <input type="text" id="regOtpInput" class="otp-input-field" maxlength="6" pattern="[0-9]{6}" placeholder="000000" autocomplete="one-time-code">
+                            <button type="button" id="btnVerifyEmailOtp" class="btn btn-primary" style="padding: 0.65rem 1.1rem; font-size: 0.9rem;" onclick="handleVerifyEmailOtp()">
+                                Verify Email OTP
+                            </button>
+                            <span id="resendOtpCountdown" style="font-size: 0.82rem; color: var(--text-muted);"></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="regPassword">Password *</label>
-                        <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="regPhone">Phone Number *</label>
-                        <input type="tel" id="regPhone" class="form-control" placeholder="10-digit mobile number" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label" for="regDob">Date of Birth</label>
-                        <input type="date" id="regDob" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="regGender">Gender</label>
-                        <select id="regGender" class="form-control">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
+                <!-- Contact Mobile Number Field (Retained for contact info, without SMS OTP) -->
+                <div class="form-group">
+                    <label class="form-label" for="regPhone">Contact Mobile Number *</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="regCountryCode" class="control-select" style="max-width: 110px; font-weight: 600; cursor: pointer; padding: 0.65rem; border: 1.5px solid #cbd5e1; border-radius: 8px;">
+                            <option value="+91" selected>🇮🇳 +91</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+65">🇸🇬 +65</option>
+                            <option value="+61">🇦🇺 +61</option>
                         </select>
+                        <input type="tel" id="regPhone" class="form-control" placeholder="10-digit mobile number" required pattern="[0-9]{10}" title="10-digit Indian phone number">
                     </div>
+                    <small style="display: block; margin-top: 0.35rem; color: var(--text-muted); font-size: 0.8rem;">
+                        Used for appointment confirmations and direct patient contact
+                    </small>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="regAddress">Address / City</label>
-                    <input type="text" id="regAddress" class="form-control" placeholder="Residential address">
+                    <label class="form-label" for="regPassword">Password *</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
                 </div>
 
-                <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;">Create Account</button>
+                <!-- Doctor Specific Notice (Specialization & Fee assigned by Admin during review) -->
+                <div id="doctorFields" style="display: none; background: #f0f9ff; border: 1.5px solid #bae6fd; border-radius: 8px; padding: 1rem; margin-bottom: 1.2rem;">
+                    <div style="font-weight: 700; color: #0369a1; font-size: 0.9rem; margin-bottom: 0.35rem;">
+                        👨‍⚕️ Doctor Credentialing Notice
+                    </div>
+                    <p style="margin: 0; color: #0c4a6e; font-size: 0.84rem; line-height: 1.45;">
+                        Upon successful email OTP verification, your doctor account will be created with <strong>Pending Approval</strong> status. The Administrator will assign your specialization, consultation fee, and consultation schedule before activating your account.
+                    </p>
+                </div>
+
+                <!-- Patient Specific Fields -->
+                <div id="patientFields">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="regDob">Date of Birth</label>
+                            <input type="date" id="regDob" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="regGender">Gender</label>
+                            <select id="regGender" class="form-control">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="regAddress">Address / City</label>
+                        <input type="text" id="regAddress" class="form-control" placeholder="Residential address">
+                    </div>
+                </div>
+
+                <button type="submit" id="regSubmitBtn" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem;" disabled>
+                    Complete Email OTP Verification Above
+                </button>
             </form>
 
             <div style="margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.9rem; color: var(--text-muted);">
                 Already have an account? <a href="/pages/login.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Login here</a>
             </div>
+
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Clinic Appointment Booking System</p>
+        <p>&copy; 2026 Clinic Appointment Booking System. All rights reserved.</p>
     </footer>
 
-    <script src="/js/api.js"></script>
-    <script src="/js/auth.js"></script>
+    <script src="/js/api.js?v=2"></script>
+    <script src="/js/auth.js?v=2"></script>
+    <script>
+        let selectedRegistrationRole = 'PATIENT';
+        let verifiedEmailAddress = '';
+        let verifiedRegistrationToken = '';
+        let resendTimerInterval = null;
+
+        function setRegisterRole(role) {
+            selectedRegistrationRole = role;
+            const btnPatient = document.getElementById('roleBtnPatient');
+            const btnDoctor = document.getElementById('roleBtnDoctor');
+            const docFields = document.getElementById('doctorFields');
+            const patFields = document.getElementById('patientFields');
+            const title = document.getElementById('regTitle');
+            const subtitle = document.getElementById('regSubtitle');
+            const nameLabel = document.getElementById('lblFullName');
+            const nameInput = document.getElementById('regName');
+
+            if (role === 'DOCTOR') {
+                btnDoctor.classList.add('active');
+                btnPatient.classList.remove('active');
+                docFields.style.display = 'block';
+                patFields.style.display = 'none';
+                title.textContent = 'Create Doctor Account';
+                subtitle.textContent = 'Register as a verified specialist to manage consults';
+                nameLabel.textContent = "Doctor's Full Name *";
+                nameInput.placeholder = "e.g. Dr. Ramesh Kumar";
+            } else {
+                btnPatient.classList.add('active');
+                btnDoctor.classList.remove('active');
+                docFields.style.display = 'none';
+                patFields.style.display = 'block';
+                title.textContent = 'Create Patient Account';
+                subtitle.textContent = 'Register to book appointments & manage health records';
+                nameLabel.textContent = "Full Name *";
+                nameInput.placeholder = "e.g. Rohan Sharma";
+            }
+            updateSubmitButtonText();
+        }
+
+        function updateSubmitButtonText() {
+            const submitBtn = document.getElementById('regSubmitBtn');
+            if (verifiedRegistrationToken) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = (selectedRegistrationRole === 'DOCTOR') ? 'Create Doctor Account' : 'Create Patient Account';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Complete Email OTP Verification Above';
+            }
+        }
+
+        function handleEmailInput(val) {
+            const feedback = document.getElementById('emailFeedback');
+            const trimmed = val.trim().toLowerCase();
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+            // If user changes email after verification, invalidate verification status to prevent email mismatch
+            if (verifiedEmailAddress && trimmed !== verifiedEmailAddress) {
+                verifiedRegistrationToken = '';
+                verifiedEmailAddress = '';
+                document.getElementById('emailVerifiedBadge').style.display = 'none';
+                document.getElementById('emailOtpCard').classList.remove('verified');
+                document.getElementById('btnSendEmailOtp').style.display = 'inline-block';
+                document.getElementById('btnSendEmailOtp').disabled = false;
+                document.getElementById('btnSendEmailOtp').textContent = 'Send OTP to Email';
+                document.getElementById('regEmail').readOnly = false;
+                updateSubmitButtonText();
+            }
+
+            if (!trimmed) {
+                feedback.className = 'live-email-status status-neutral';
+                feedback.innerHTML = 'ℹ️ Email address will serve as your permanent unique login ID';
+            } else if (emailRegex.test(trimmed)) {
+                feedback.className = 'live-email-status status-valid';
+                feedback.innerHTML = '✓ Valid email format. Click "Send OTP to Email" to receive verification code.';
+            } else {
+                feedback.className = 'live-email-status status-invalid';
+                feedback.innerHTML = '⚠️ Enter a valid email address with domain (e.g. name@domain.com)';
+            }
+        }
+
+        async function handleSendEmailOtp() {
+            const emailInput = document.getElementById('regEmail');
+            const nameInput = document.getElementById('regName');
+            const btnSendOtp = document.getElementById('btnSendEmailOtp');
+
+            const email = emailInput.value.trim().toLowerCase();
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                showAlert('Please enter your full name first.', 'error');
+                nameInput.focus();
+                return;
+            }
+
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            if (!email || !emailRegex.test(email)) {
+                showAlert('Please enter a valid original email address before requesting an OTP.', 'error');
+                emailInput.focus();
+                return;
+            }
+
+            try {
+                btnSendOtp.disabled = true;
+                btnSendOtp.textContent = 'Sending OTP...';
+
+                const response = await apiRequest('/auth/send-registration-otp', 'POST', {
+                    email: email,
+                    name: name,
+                    role: selectedRegistrationRole,
+                    purpose: 'REGISTRATION'
+                });
+
+                if (response.success) {
+                    const errNotice = document.getElementById('smtpErrorNotice');
+                    if (errNotice) errNotice.style.display = 'none';
+                    showAlert(response.message || 'OTP dispatched to your email address!', 'success');
+                    document.getElementById('otpInputSection').style.display = 'block';
+                    document.getElementById('regOtpInput').focus();
+                    startResendCountdown(60);
+                }
+            } catch (err) {
+                showAlert(err.message || 'Failed to dispatch email OTP.', 'error');
+                const errNotice = document.getElementById('smtpErrorNotice');
+                if (errNotice) {
+                    errNotice.style.display = 'block';
+                    errNotice.innerHTML = `<strong>⚠️ Email SMTP:</strong> ${err.message || 'Failed to dispatch email OTP.'}<br><span style="margin-top: 6px; display:inline-block; font-size: 0.8rem;"><a href="/api/auth/email-status" target="_blank" style="color: #b91c1c; font-weight: 600; text-decoration: underline;">🔍 Inspect Gmail SMTP Configuration Status</a></span>`;
+                }
+                btnSendOtp.disabled = false;
+                btnSendOtp.textContent = 'Send OTP to Email';
+            }
+        }
+
+        function startResendCountdown(seconds) {
+            const btn = document.getElementById('btnSendEmailOtp');
+            const timer = document.getElementById('resendOtpCountdown');
+            btn.disabled = true;
+            let remaining = seconds;
+            btn.textContent = `Resend in ${remaining}s`;
+
+            if (resendTimerInterval) clearInterval(resendTimerInterval);
+            resendTimerInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(resendTimerInterval);
+                    btn.disabled = false;
+                    btn.textContent = 'Resend OTP to Email';
+                    timer.textContent = '';
+                } else {
+                    btn.textContent = `Resend in ${remaining}s`;
+                }
+            }, 1000);
+        }
+
+        async function handleVerifyEmailOtp() {
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const otpInput = document.getElementById('regOtpInput');
+            const btnVerify = document.getElementById('btnVerifyEmailOtp');
+            const otp = otpInput.value.trim();
+
+            if (!otp || otp.length !== 6) {
+                showAlert('Please enter the complete 6-digit OTP code received in your email.', 'error');
+                otpInput.focus();
+                return;
+            }
+
+            try {
+                btnVerify.disabled = true;
+                btnVerify.textContent = 'Verifying...';
+
+                const response = await apiRequest('/auth/verify-registration-otp', 'POST', {
+                    email: email,
+                    otp: otp,
+                    purpose: 'REGISTRATION'
+                });
+
+                if (response.success && response.verificationToken) {
+                    verifiedRegistrationToken = response.verificationToken;
+                    verifiedEmailAddress = email;
+
+                    showAlert('Email address verified successfully! You may now complete account registration.', 'success');
+                    document.getElementById('otpInputSection').style.display = 'none';
+                    document.getElementById('btnSendEmailOtp').style.display = 'none';
+                    document.getElementById('emailVerifiedBadge').style.display = 'inline-flex';
+                    document.getElementById('emailOtpCard').classList.add('verified');
+                    document.getElementById('regEmail').readOnly = true;
+
+                    updateSubmitButtonText();
+                }
+            } catch (err) {
+                showAlert(err.message || 'Incorrect or expired OTP code.', 'error');
+            } finally {
+                btnVerify.disabled = false;
+                btnVerify.textContent = 'Verify Email OTP';
+            }
+        }
+
+        async function handleRegistrationSubmit(event) {
+            event.preventDefault();
+
+            if (!verifiedRegistrationToken) {
+                showAlert('Email OTP verification is required before creating an account. Please click "Send OTP to Email" and verify your email.', 'error');
+                return;
+            }
+
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const password = document.getElementById('regPassword').value.trim();
+            const phone = document.getElementById('regPhone').value.replace(/\D/g, '').trim();
+            const submitBtn = document.getElementById('regSubmitBtn');
+
+            if (verifiedEmailAddress && email !== verifiedEmailAddress) {
+                showAlert('Registration email does not match the verified email address. Please verify your email again.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters.', 'error');
+                return;
+            }
+
+            if (!phone || phone.length !== 10) {
+                showAlert('Please enter a valid 10-digit contact mobile number.', 'error');
+                document.getElementById('regPhone').focus();
+                return;
+            }
+
+            const payload = {
+                name,
+                email,
+                password,
+                phone,
+                role: selectedRegistrationRole,
+                verificationToken: verifiedRegistrationToken
+            };
+
+            if (selectedRegistrationRole === 'PATIENT') {
+                payload.dob = document.getElementById('regDob').value || null;
+                payload.gender = document.getElementById('regGender').value || null;
+                payload.address = document.getElementById('regAddress').value.trim() || null;
+            }
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating Account...';
+
+                const response = await apiRequest('/auth/register', 'POST', payload);
+
+                if (response.success) {
+                    if (selectedRegistrationRole === 'DOCTOR') {
+                        showAlert('Doctor account created! Your profile is pending Administrator review and activation.', 'success');
+                    } else {
+                        showAlert('Patient account created successfully! Redirecting to login...', 'success');
+                    }
+                    setTimeout(() => {
+                        window.location.href = '/pages/login.html';
+                    }, 1800);
+                }
+            } catch (error) {
+                showAlert(error.message || 'Account registration failed.', 'error');
+                submitBtn.disabled = false;
+                updateSubmitButtonText();
+            }
+        }
+    </script>
 </body>
 </html>

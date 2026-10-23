@@ -15,8 +15,8 @@ public class Doctor {
     @JoinColumn(name = "user_id", referencedColumnName = "id", unique = true)
     private User user;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "specialization_id", referencedColumnName = "id")
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "specialization_id", referencedColumnName = "id", nullable = true)
     private Specialization specialization;
 
     @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
@@ -24,6 +24,12 @@ public class Doctor {
 
     @Column(name = "is_available", nullable = false)
     private boolean isAvailable = true;
+
+    @Column(name = "approval_status", length = 30, nullable = false)
+    private String approvalStatus = "APPROVED"; // "APPROVED", "PENDING_APPROVAL", "INACTIVE"
+
+    @Column(name = "phone", length = 20)
+    private String phone;
 
     public Doctor() {
     }
@@ -33,6 +39,15 @@ public class Doctor {
         this.specialization = specialization;
         this.consultationFee = consultationFee;
         this.isAvailable = isAvailable;
+        this.approvalStatus = "APPROVED";
+    }
+
+    public Doctor(User user, Specialization specialization, BigDecimal consultationFee, boolean isAvailable, String approvalStatus) {
+        this.user = user;
+        this.specialization = specialization;
+        this.consultationFee = consultationFee;
+        this.isAvailable = isAvailable;
+        this.approvalStatus = approvalStatus;
     }
 
     // Getters and Setters
@@ -74,5 +89,21 @@ public class Doctor {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

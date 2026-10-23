@@ -19,8 +19,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(EmergencyAlreadyAcceptedException.class)
+    public ResponseEntity<ApiResponse> handleEmergencyAlreadyAccepted(EmergencyAlreadyAcceptedException ex) {
+        return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse> handleBadRequest(BadRequestException ex) {
+        return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailDeliveryException.class)
+    public ResponseEntity<ApiResponse> handleEmailDelivery(EmailDeliveryException ex) {
+        return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SmsDeliveryException.class)
+    public ResponseEntity<ApiResponse> handleSmsDelivery(SmsDeliveryException ex) {
         return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 

@@ -24,10 +24,15 @@ public class DoctorController {
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getAllDoctors(
             @RequestParam(required = false) Long specializationId,
-            @RequestParam(required = false) String search) {
-        List<DoctorDto> list = doctorService.getAllDoctors(specializationId, search);
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status) {
+        if (status == null || status.trim().isEmpty()) {
+            status = "APPROVED";
+        }
+        List<DoctorDto> list = doctorService.getAllDoctors(specializationId, search, status);
         return ResponseEntity.ok(list);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<DoctorDto> getDoctorById(@PathVariable Long id) {

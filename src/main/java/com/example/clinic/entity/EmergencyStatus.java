@@ -1,0 +1,20 @@
+package com.example.clinic.entity;
+
+/**
+ * Emergency request lifecycle states.
+ * Flow: CREATED → ALERTING_HOSPITALS → ACCEPTED → DOCTOR_ASSIGNED → AMBULANCE_DISPATCHED → EN_ROUTE → ARRIVED → COMPLETED
+ * Failure: CANCELLED, TIMEOUT, ESCALATED, REJECTED
+ */
+public enum EmergencyStatus {
+    CREATED,
+    ALERTING_HOSPITALS,
+    ACCEPTED,
+    DOCTOR_ASSIGNED,
+    AMBULANCE_DISPATCHED,
+    EN_ROUTE,
+    ARRIVED,
+    COMPLETED,
+    CANCELLED,
+    TIMEOUT,
+    ESCALATED
+}

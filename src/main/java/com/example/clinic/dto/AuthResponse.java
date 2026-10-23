@@ -8,6 +8,14 @@ public class AuthResponse {
     private String email;
     private String role;
     private Long profileId; // patientId or doctorId
+    private boolean requiresVerification = false;
+    private boolean emailVerified = true;
+    private boolean devMode = false;
+    private String devVerificationCode;
+    private String approvalStatus;
+    private String resetToken;
+    private String verificationToken;
+    private String maskedPhone;
 
     public AuthResponse() {
     }
@@ -76,5 +84,69 @@ public class AuthResponse {
 
     public void setProfileId(Long profileId) {
         this.profileId = profileId;
+    }
+
+    public boolean isRequiresVerification() {
+        return requiresVerification;
+    }
+
+    public void setRequiresVerification(boolean requiresVerification) {
+        this.requiresVerification = requiresVerification;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
+    }
+
+    public String getDevVerificationCode() {
+        return devVerificationCode;
+    }
+
+    public void setDevVerificationCode(String devVerificationCode) {
+        this.devVerificationCode = devVerificationCode;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public String getMaskedPhone() {
+        return maskedPhone;
+    }
+
+    public void setMaskedPhone(String maskedPhone) {
+        this.maskedPhone = maskedPhone;
     }
 }

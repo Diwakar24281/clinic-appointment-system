@@ -8,6 +8,8 @@ public class DoctorUpdateRequest {
     private Long specializationId;
     private BigDecimal consultationFee;
     private Boolean isAvailable;
+    private String approvalStatus;
+    private String phone;
     private List<DoctorAvailabilityDto> availabilities;
 
     public DoctorUpdateRequest() {
@@ -43,6 +45,22 @@ public class DoctorUpdateRequest {
 
     public void setIsAvailable(Boolean isAvailable) {
         this.isAvailable = isAvailable;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public List<DoctorAvailabilityDto> getAvailabilities() {

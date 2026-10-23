@@ -1,0 +1,591 @@
+/* ===================================================
+   EMERGENCY DISPATCH & RESPONSE SYSTEM - STYLES
+   =================================================== */
+
+:root {
+    --emergency-red: #ef4444;
+    --emergency-red-dark: #dc2626;
+    --emergency-red-glow: rgba(239, 68, 68, 0.35);
+    --emergency-orange: #f97316;
+    --emergency-amber: #f59e0b;
+    --emergency-blue: #0284c7;
+    --emergency-green: #10b981;
+    --emergency-dark: #0f172a;
+    --emergency-card-bg: rgba(255, 255, 255, 0.95);
+}
+
+/* SOS Navigation Button */
+.nav-sos-btn {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    animation: sosPulse 2s infinite ease-in-out;
+}
+
+.nav-sos-btn:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.75);
+}
+
+@keyframes sosPulse {
+    0%, 100% {
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 24px rgba(239, 68, 68, 0.85);
+    }
+}
+
+/* Hero Section for Emergency */
+.emergency-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #450a0a 100%);
+    color: white;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.emergency-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 60%);
+    pointer-events: none;
+    animation: rotateBackground 20s linear infinite;
+}
+
+@keyframes rotateBackground {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.emergency-hero h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.emergency-hero p {
+    color: #cbd5e1;
+    font-size: 1.05rem;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+/* Big SOS Trigger Circle */
+.sos-button-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2.5rem 0 1.5rem;
+}
+
+.sos-circle-btn {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #f87171, #dc2626 70%, #991b1b);
+    border: none;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7), 0 15px 30px rgba(185, 28, 28, 0.4);
+    animation: ripple 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    outline: none;
+}
+
+.sos-circle-btn span.sos-text {
+    font-size: 2.2rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+}
+
+.sos-circle-btn span.sos-subtext {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.9;
+}
+
+.sos-circle-btn:hover {
+    transform: scale(1.06);
+    background: radial-gradient(circle at 30% 30%, #fca5a5, #ef4444 70%, #b91c1c);
+}
+
+.sos-circle-btn:active {
+    transform: scale(0.96);
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8), 0 0 0 0 rgba(239, 68, 68, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 25px rgba(239, 68, 68, 0), 0 0 0 45px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0), 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Voice Assistant Card */
+.voice-assistant-card {
+    background: #ffffff;
+    border: 2px solid #fee2e2;
+    border-radius: 16px;
+    padding: 1.75rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.voice-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.voice-badge {
+    background: #fef2f2;
+    color: #dc2626;
+    padding: 0.3rem 0.8rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.voice-mic-container {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.voice-mic-btn {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #0284c7;
+    border: none;
+    color: white;
+    font-size: 1.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.voice-mic-btn.listening {
+    background: #ef4444;
+    animation: micWave 1.4s infinite;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+}
+
+@keyframes micWave {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 16px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+.voice-status-text {
+    flex-grow: 1;
+}
+
+.voice-transcript {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 500;
+    min-height: 24px;
+}
+
+.voice-instructions {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+/* Category Quick Select Chips */
+.category-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.85rem;
+}
+
+.category-chip {
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1.5px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.category-chip:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.category-chip.selected {
+    border-color: #ef4444;
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.35);
+}
+
+/* GPS Location Banner */
+.gps-status-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.gps-info {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.gps-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #dbeafe;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.gps-icon.active {
+    background: #d1fae5;
+    color: #059669;
+}
+
+/* Tracking Stepper */
+.tracking-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 2.5rem 0;
+}
+
+.tracking-stepper::before {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: 30px;
+    right: 30px;
+    height: 3px;
+    background: #e2e8f0;
+    z-index: 1;
+}
+
+.tracking-stepper-progress {
+    position: absolute;
+    top: 22px;
+    left: 30px;
+    height: 3px;
+    background: #10b981;
+    z-index: 2;
+    transition: width 0.5s ease-in-out;
+}
+
+.step-node {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    text-align: center;
+}
+
+.step-dot {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #cbd5e1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #64748b;
+    transition: all 0.3s;
+}
+
+.step-node.completed .step-dot {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+}
+
+.step-node.active .step-dot {
+    background: #0284c7;
+    border-color: #0284c7;
+    color: #ffffff;
+    box-shadow: 0 0 0 6px rgba(2, 132, 199, 0.2);
+    animation: activeStepPulse 1.8s infinite;
+}
+
+@keyframes activeStepPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.25);
+    }
+    50% {
+        box-shadow: 0 0 0 9px rgba(2, 132, 199, 0.45);
+    }
+}
+
+.step-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.step-node.active .step-label {
+    color: #0284c7;
+    font-weight: 700;
+}
+
+.step-node.completed .step-label {
+    color: #059669;
+}
+
+/* Dispatch Map / Visualizer Canvas */
+.dispatch-tracker-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.tracker-canvas-container {
+    height: 280px;
+    background: #0f172a;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.radar-grid {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(16, 185, 129, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.radar-sweep {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    animation: radarSpin 6s linear infinite;
+}
+
+@keyframes radarSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.eta-badge {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    color: #ffffff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.eta-time {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #10b981;
+}
+
+/* Doctor Emergency Alert Modal */
+.doctor-alert-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.doctor-alert-box {
+    background: #ffffff;
+    border-radius: 18px;
+    max-width: 540px;
+    width: 100%;
+    padding: 2rem;
+    border: 3px solid #ef4444;
+    box-shadow: 0 0 35px rgba(239, 68, 68, 0.5);
+    animation: alertBounce 0.4s ease-out;
+    text-align: center;
+}
+
+@keyframes alertBounce {
+    0% { transform: scale(0.8); opacity: 0; }
+    80% { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.alert-siren-icon {
+    font-size: 3.5rem;
+    animation: sirenShake 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes sirenShake {
+    0% { transform: rotate(-15deg) scale(1); }
+    100% { transform: rotate(15deg) scale(1.15); }
+}
+
+/* Hospital Dashboard Cards */
+.emergency-inbox-item {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1.5px solid #e2e8f0;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.emergency-inbox-item:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.emergency-inbox-item.critical {
+    border-left: 6px solid #ef4444;
+}
+
+.emergency-inbox-item.accepted {
+    border-left: 6px solid #10b981;
+}
+
+.emergency-inbox-item.dispatched {
+    border-left: 6px solid #0284c7;
+}
+
+/* Status Badges */
+.status-pill {
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.status-pill.ALERTING_HOSPITALS {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status-pill.ACCEPTED {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.status-pill.DOCTOR_ASSIGNED {
+    background: #fdf4ff;
+    color: #a21caf;
+    border: 1px solid #f5d0fe;
+}
+
+.status-pill.AMBULANCE_DISPATCHED, .status-pill.EN_ROUTE {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+}
+
+.status-pill.ARRIVED {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.status-pill.COMPLETED {
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}

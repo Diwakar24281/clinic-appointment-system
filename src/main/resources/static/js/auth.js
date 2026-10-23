@@ -1,24 +1,71 @@
 /**
- * Auth JavaScript logic: Login and Registration
+ * Clinic Appointment System - Authentication & Portal Controller
  */
+
+let selectedPortal = 'PATIENT';
+
+function choosePortal(portal, label) {
+    selectedPortal = portal;
+
+    const triggerText = document.getElementById('portalTriggerText');
+    const portalInput = document.getElementById('loginPortalInput');
+    if (triggerText) triggerText.textContent = label || portal;
+    if (portalInput) portalInput.value = portal;
+
+    // Update active highlight on dropdown items
+    ['PATIENT', 'DOCTOR', 'ADMIN'].forEach(r => {
+        const item = document.getElementById(`portalItem-${r}`);
+        if (item) {
+            if (r === portal) {
+                item.classList.add('active');
+                item.setAttribute('aria-selected', 'true');
+            } else {
+                item.classList.remove('active');
+                item.setAttribute('aria-selected', 'false');
+            }
+        }
+    });
+
+    const menu = document.getElementById('portalDropdownMenu');
+    const trigger = document.getElementById('portalDropdownTrigger');
+    if (menu) menu.classList.remove('show');
+    if (trigger) {
+        trigger.classList.remove('open');
+        trigger.setAttribute('aria-expanded', 'false');
+    }
+}
+
+// Backward-compatible alias
+function selectPortal(portal, label) {
+    choosePortal(portal, label);
+}
 
 async function handleLogin(event) {
     event.preventDefault();
 
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value.trim();
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
     const submitBtn = document.getElementById('loginSubmitBtn');
+    const portalInput = document.getElementById('loginPortalInput');
+
+    const email = emailInput ? emailInput.value.trim() : '';
+    const password = passwordInput ? passwordInput.value.trim() : '';
+    const portal = (portalInput && portalInput.value) ? portalInput.value : selectedPortal;
 
     if (!email || !password) {
-        showAlert('Please enter both email and password.', 'error');
+        showAlert('Please enter both email address and password.', 'error');
         return;
     }
 
     try {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Logging in...';
+        submitBtn.textContent = 'Signing In...';
 
-        const response = await apiRequest('/auth/login', 'POST', { email, password });
+        const response = await apiRequest('/auth/login', 'POST', {
+            email,
+            password,
+            portal: portal
+        });
 
         if (response.success) {
             setCurrentUser(response);
@@ -31,60 +78,17 @@ async function handleLogin(event) {
                     window.location.href = '/pages/doctor-dashboard.html';
                 } else if (response.role === 'ADMIN') {
                     window.location.href = '/pages/admin-dashboard.html';
+                } else if (response.role === 'HOSPITAL') {
+                    window.location.href = '/pages/hospital-dashboard.html';
                 } else {
                     window.location.href = '/pages/index.html';
                 }
-            }, 800);
+            }, 600);
         }
     } catch (error) {
-        showAlert(error.message || 'Login failed. Please check credentials.', 'error');
+        showAlert(error.message || 'Login failed. Please verify credentials or portal selection.', 'error');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Sign In';
-    }
-}
-
-async function handleRegister(event) {
-    event.preventDefault();
-
-    const name = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPassword').value.trim();
-    const phone = document.getElementById('regPhone').value.trim();
-    const dob = document.getElementById('regDob').value;
-    const gender = document.getElementById('regGender').value;
-    const address = document.getElementById('regAddress').value.trim();
-    const submitBtn = document.getElementById('regSubmitBtn');
-
-    if (!name || !email || !password || !phone) {
-        showAlert('Please fill in all mandatory fields.', 'error');
-        return;
-    }
-
-    try {
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Creating Account...';
-
-        const response = await apiRequest('/auth/register', 'POST', {
-            name,
-            email,
-            password,
-            phone,
-            dob: dob || null,
-            gender: gender || null,
-            address: address || null
-        });
-
-        if (response.success) {
-            showAlert('Registration successful! Redirecting to login...', 'success');
-            setTimeout(() => {
-                window.location.href = '/pages/login.html';
-            }, 1000);
-        }
-    } catch (error) {
-        showAlert(error.message || 'Registration failed.', 'error');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Create Account';
     }
 }

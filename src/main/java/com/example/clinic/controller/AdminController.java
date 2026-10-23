@@ -50,6 +50,12 @@ public class AdminController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/specializations/{id}")
+    public ResponseEntity<ApiResponse> deleteSpecialization(@PathVariable Long id) {
+        adminService.deleteSpecialization(id);
+        return ResponseEntity.ok(new ApiResponse(true, "Specialization deleted successfully."));
+    }
+
     @GetMapping("/appointments")
     public ResponseEntity<List<AppointmentResponse>> getAllAppointments() {
         List<AppointmentResponse> list = adminService.getAllAppointments();

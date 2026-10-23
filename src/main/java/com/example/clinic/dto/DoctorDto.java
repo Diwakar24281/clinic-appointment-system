@@ -8,13 +8,51 @@ public class DoctorDto {
     private Long userId;
     private String name;
     private String email;
+    private String phone;
+    private String approvalStatus;
     private Long specializationId;
     private String specializationName;
     private BigDecimal consultationFee;
     private boolean isAvailable;
     private List<DoctorAvailabilityDto> availabilities;
+    private String todayAvailabilityStatus;
+    private String todayWorkingHours;
+    private String availableDaysSummary;
+    private String availableDatesAndTimes;
 
     public DoctorDto() {
+    }
+
+    public String getTodayAvailabilityStatus() {
+        return todayAvailabilityStatus;
+    }
+
+    public void setTodayAvailabilityStatus(String todayAvailabilityStatus) {
+        this.todayAvailabilityStatus = todayAvailabilityStatus;
+    }
+
+    public String getTodayWorkingHours() {
+        return todayWorkingHours;
+    }
+
+    public void setTodayWorkingHours(String todayWorkingHours) {
+        this.todayWorkingHours = todayWorkingHours;
+    }
+
+    public String getAvailableDaysSummary() {
+        return availableDaysSummary;
+    }
+
+    public void setAvailableDaysSummary(String availableDaysSummary) {
+        this.availableDaysSummary = availableDaysSummary;
+    }
+
+    public String getAvailableDatesAndTimes() {
+        return availableDatesAndTimes;
+    }
+
+    public void setAvailableDatesAndTimes(String availableDatesAndTimes) {
+        this.availableDatesAndTimes = availableDatesAndTimes;
     }
 
     public Long getId() {
@@ -47,6 +85,22 @@ public class DoctorDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
     }
 
     public Long getSpecializationId() {

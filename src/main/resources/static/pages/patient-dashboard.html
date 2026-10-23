@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard - Clinic Appointment Booking System</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/emergency.css">
 </head>
 <body>
 
@@ -17,6 +18,37 @@
     </nav>
 
     <div class="container">
+        <!-- Prominent Emergency SOS Callout Banner -->
+        <div class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%); color: white; border: none; box-shadow: 0 4px 20px rgba(220, 38, 38, 0.35);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="font-size: 2.5rem; animation: pulse 1.5s infinite;">🚨</div>
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #ffffff;">Need Immediate Medical Emergency Care?</h3>
+                        <p style="margin: 0.2rem 0 0; color: #fecaca; font-size: 0.88rem;">
+                            Rapid voice-assisted ambulance dispatch & emergency hospital notification network.
+                        </p>
+                    </div>
+                </div>
+                <a href="/pages/emergency.html" class="nav-sos-btn" style="font-size: 1.05rem; padding: 0.75rem 1.6rem !important;">
+                    🚨 Request Emergency Help Now
+                </a>
+            </div>
+        </div>
+
+        <!-- Active Emergency Live Tracker Alert (dynamically populated) -->
+        <div id="patientActiveEmergencyBanner" class="card" style="display: none; margin-bottom: 1.5rem; background: #fef2f2; border: 2px solid #ef4444;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="status-pill ALERTING_HOSPITALS" id="patientActiveStatusPill">DISPATCH ACTIVE</span>
+                    <strong style="color: #0f172a;" id="patientActiveEmergencyTitle">You have an active emergency request in progress</strong>
+                </div>
+                <a id="patientActiveTrackBtn" href="#" class="btn btn-sm btn-primary">
+                    📍 View Live Ambulance Tracker &rarr;
+                </a>
+            </div>
+        </div>
+
         <!-- Welcome Card -->
         <div class="card" style="margin-bottom: 2rem; background: #ffffff; border-left: 5px solid var(--primary);">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
