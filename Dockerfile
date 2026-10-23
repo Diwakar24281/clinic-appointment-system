@@ -21,5 +21,13 @@ COPY --from=build /app/target/*.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
 
-# Launch application
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
+# JVM options configured for Render Free (512 MB memory limit)
+# -XX:+UseSerialGC: minimizes GC memory overhead on low-memory containers
+# -Xss512k: halves default per-thread stack footprint
+# -XX:MaxRAMPercentage=75.0: dynamically limits heap to ~384MB on a 512MB host
+# Allows override via JAVA_OPTS environment variable if needed
+ENV JAVA_OPTS="-XX:+UseSerialGC -Xss512k -XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom"
+
+# Launch application using configured JVM flags
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
+

@@ -35,6 +35,8 @@ if (Test-Path $envFile) {
 # 2. Pull persistent User/Machine environment variables if not already set in process
 $envVars = @(
     'SPRING_DATASOURCE_PASSWORD', 'SPRING_DATASOURCE_USERNAME', 'SPRING_DATASOURCE_URL',
+    'MYSQL_HOST', 'MYSQL_PORT', 'MYSQL_DATABASE', 'MYSQL_USER', 'MYSQL_PASSWORD', 'MYSQL_USE_SSL', 'MYSQL_SSL_MODE',
+    'EMAIL_PROVIDER', 'BREVO_API_KEY', 'BREVO_SENDER_EMAIL', 'BREVO_SENDER_NAME',
     'MAIL_USERNAME', 'MAIL_PASSWORD', 'SPRING_MAIL_USERNAME', 'SPRING_MAIL_PASSWORD', 'SPRING_MAIL_HOST', 'SPRING_MAIL_PORT',
     'SMS_PROVIDER', 'TWILIO_ACCOUNT_SID', 'TWILIO_AUTH_TOKEN', 'TWILIO_PHONE_NUMBER', 'FAST2SMS_API_KEY', 'FAST2SMS_ROUTE'
 )
@@ -52,14 +54,19 @@ foreach ($v in $envVars) {
 
 Write-Host "Configuring application runtime environment..." -ForegroundColor Cyan
 
-# Check Gmail SMTP status for Email OTP Registration
-$mailUser = if ($env:MAIL_USERNAME) { $env:MAIL_USERNAME } else { $env:SPRING_MAIL_USERNAME }
-$mailPass = if ($env:MAIL_PASSWORD) { $env:MAIL_PASSWORD } else { $env:SPRING_MAIL_PASSWORD }
-
-if ($mailUser -and $mailPass) {
-    Write-Host "Email OTP:  Gmail SMTP Configured (Sender: $mailUser | Password: [16-char App Password Active])" -ForegroundColor Green
+# Check Email OTP status (Brevo HTTPS vs Gmail SMTP)
+if ($env:BREVO_API_KEY) {
+    $brevoSender = if ($env:BREVO_SENDER_EMAIL) { $env:BREVO_SENDER_EMAIL } else { $env:MAIL_USERNAME }
+    Write-Host "Email OTP:  Brevo HTTPS REST API Active (Sender: $brevoSender | API Key: [Configured])" -ForegroundColor Green
 } else {
-    Write-Host "Email OTP:  Gmail SMTP Not Set. Configure MAIL_USERNAME & MAIL_PASSWORD in .env for live OTP delivery." -ForegroundColor Yellow
+    $mailUser = if ($env:MAIL_USERNAME) { $env:MAIL_USERNAME } else { $env:SPRING_MAIL_USERNAME }
+    $mailPass = if ($env:MAIL_PASSWORD) { $env:MAIL_PASSWORD } else { $env:SPRING_MAIL_PASSWORD }
+
+    if ($mailUser -and $mailPass) {
+        Write-Host "Email OTP:  Gmail SMTP Configured (Sender: $mailUser | Password: [16-char App Password Active])" -ForegroundColor Green
+    } else {
+        Write-Host "Email OTP:  Neither Brevo nor Gmail SMTP configured. Set BREVO_API_KEY or MAIL_USERNAME/MAIL_PASSWORD in .env." -ForegroundColor Yellow
+    }
 }
 
 mvn spring-boot:run
